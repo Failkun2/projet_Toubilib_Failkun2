@@ -18,4 +18,14 @@ class PracticienDTO{
         $this->email = $email;
         $this->specialite = $specialite;
     }
+
+    public function Serialise_JSON() : array{
+        return[
+            'nom' => $this->nom,
+            'prenom' => $this->prenom,
+            'ville' => $this->ville,
+            'email' => $this->email,
+            'specialite' => $this->specialite,
+        ];
+    }
 }
