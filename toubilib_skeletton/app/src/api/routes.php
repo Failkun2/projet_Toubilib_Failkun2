@@ -10,7 +10,7 @@ return function( \Slim\App $app):\Slim\App {
 
 
     $app->get('/', HomeAction::class);
-
+    $app->get('/practiciens', ListerPracticiensAction::class);
   
 
     return $app;
