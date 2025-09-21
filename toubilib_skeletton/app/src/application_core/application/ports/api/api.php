@@ -1,11 +1,14 @@
 <?php
 
-use toubilib\core\domain\entities\praticien\ServicePracticienInterface as ServicePracticienInterface;
-use toubilib\api\actions\ListerPracticiensAction as ListerPracticiensAction;
+use toubilib\core\domain\entities\praticien\ServicePraticienInterface as ServicePraticienInterface;
+use toubilib\api\actions\ListerPraticiensAction as ListerPraticiensAction;
 use Psr\Container\ContainerInterface;
 
 return [
-    ListerPracticiensAction::class=> function (ContainerInterface $c) {
-        return new ListerPracticiensAction($c->get(ServicePracticienInterface::class));
+    ListerPraticiensAction::class=> function (ContainerInterface $c) {
+        return new ListerPraticiensAction($c->get(ServicePraticienInterface::class));
+    },
+    PraticienByIdAction::class=> function (ContainerInterface $c) {
+        return new PraticienByIdAction($c->get(ConsulterPraticienServiceInterface::class));
     },
 ];

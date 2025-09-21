@@ -1,10 +1,10 @@
 <?php
 
 use Psr\Container\ContainerInterface;
-use toubilib\core\application\ports\spi\repositoryInterfaces\PracticienRepositoryInterface as PracticienRepositoryInterface;
-use toubilib\core\domain\entities\praticien\PracticienRepository as PracticienRepository;
-use toubilib\core\domain\entities\ServicePracticienInterface as ServicePracticienInterface;
-use toubilib\core\application\usecases\ServicePracticien as ServicePracticien;
+use toubilib\core\application\ports\spi\repositoryInterfaces\praticienRepositoryInterface as praticienRepositoryInterface;
+use toubilib\core\domain\entities\praticien\praticienRepository as praticienRepository;
+use toubilib\core\domain\entities\ServicepraticienInterface as ServicepraticienInterface;
+use toubilib\core\application\usecases\Servicepraticien as Servicepraticien;
 
 return [
     \PDO::class => function(ContainerInterface $c){
@@ -14,10 +14,13 @@ return [
         $password = $config['password'];
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
-    PracticienRepositoryInterface::class=> function (ContainerInterface $c) {
-        return new PracticienRepository($c->get(\PDO::class));
+    PraticienRepositoryInterface::class=> function (ContainerInterface $c) {
+        return new praticienRepository($c->get(\PDO::class));
     },
-    ServicePracticienInterface::class=> function (ContainerInterface $c) {
-        return new ServicePracticien($c->get(PracticienRepositoryInterface::class));
+    ServicePraticienInterface::class=> function (ContainerInterface $c) {
+        return new Servicepraticien($c->get(praticienRepositoryInterface::class));
+    },
+    ConsulterPraticienServiceInterface::class=> function (ContainerInterface $c) {
+        return new ConsulterPraticienService($c->get(ConsulterPraticienServiceInterface::class));
     },
 ];

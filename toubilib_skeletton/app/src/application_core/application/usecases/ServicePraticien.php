@@ -2,8 +2,8 @@
 
 namespace toubilib\core\application\usecases;
 
-
-
+use toubilib\core\domain\entities\ServicePraticienInterface as ServicePraticienInterface;
+use toubilib\core\application\ports\api\dtos\PraticienDTO as PraticienDTO;
 
 class ServicePraticien implements ServicePraticienInterface
 {
@@ -15,16 +15,16 @@ class ServicePraticien implements ServicePraticienInterface
     }
 
     public function listerPraticiens(): array {
-    	$practiciens = $this->practicienRepository->findPracticiens();
+    	$praticiens = $this->praticienRepository->findPraticiens();
 
-        return array_map(function($practicien){
-            return new PracticienDTO(
-                $practicien->__get("nom"),
-                $practicien->__get("prenom"),
-                $practicien->__get("ville"),
-                $practicien->__get("email"),
-                $practicien->__get("specialite")
+        return array_map(function($praticien){
+            return new PraticienDTO(
+                $praticien->__get("nom"),
+                $praticien->__get("prenom"),
+                $praticien->__get("ville"),
+                $praticien->__get("email"),
+                $praticien->__get("specialite")
             );
-        }, $practiciens);
+        }, $praticiens);
     }
 }

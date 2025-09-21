@@ -6,19 +6,19 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use toubilib\api\actions\AbstractAction as AbstractAction;
-use toubilib\core\domain\entities\praticien\ServicePracticienInterface as ServicePracticienInterface;
+use toubilib\core\domain\entities\praticien\ServicePraticienInterface as ServicePraticienInterface;
 
-class ListerPracticiensAction extends AbstractAction{
+class ListerPraticiensAction extends AbstractAction{
 
-    private ServicePracticienInterface $service;
+    private ServicePraticienInterface $service;
 
-    public function __construct(ServicePracticienInterface $service){
+    public function __construct(ServicePraticienInterface $service){
         $this->service = $service;
     }
 
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
-        $practiciens = $this->service->listerPracticiens();
-        $json = json_encode($practiciens, JSON_PRETTY_PRINT);
+        $praticiens = $this->service->listerPraticiens();
+        $json = json_encode($praticiens, JSON_PRETTY_PRINT);
         $rs->getBody()->write($json);
         return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
     }
