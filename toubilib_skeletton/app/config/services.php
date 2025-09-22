@@ -29,4 +29,7 @@ return [
     ServiceRendezVousInterface::class=> function (ContainerInterface $c) {
         return new ServiceRendezVous($c->get(RendezVousRepositoryInterface::class));
     },
+    ConsulterRendezVousServiceInterface::class=> function (ContainerInterface $c) {
+        return new ConsulterRendezVousService($c->get(ConsulterRendezVousServiceInterface::class));
+    },
 ];

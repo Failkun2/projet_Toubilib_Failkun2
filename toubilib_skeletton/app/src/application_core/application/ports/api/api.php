@@ -14,4 +14,7 @@ return [
     PraticienRDVAction::class=> function (ContainerInterface $c) {
         return new PraticienRDVAction($c->get(ServiceRendezVousInterface::class));
     },
+    RendezVousByIdAction::class=> function (ContainerInterface $c) {
+        return new RendezVousByIdAction($c->get(ConsulterRendezVousServiceInterface::class));
+    },
 ];

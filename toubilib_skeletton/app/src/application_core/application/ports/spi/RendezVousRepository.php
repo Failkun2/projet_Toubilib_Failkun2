@@ -36,4 +36,20 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         }, $rendezVous);
     }
 
+    public function findById(int $id): RendezVous{
+        $stmt = $this->pdo->prepare("SELECT date_heure_debut, date_heure_fin, duree, statut, motif_visite, date_creation 
+        FROM rdv
+        WHERE id = :id");
+        $stmt->execute(['id' => $id,]);
+        $rendezVous = $stmt->fetch(PDO::FETCH_ASSOC);
+        return new RendezVous(
+            new \DateTimeImmutable($rendezVous["date_heure_debut"]),
+            new \DateTimeImmutable($rendezVous["date_heure_fin"]),
+            (int)$rendezVous['duree'],
+            (int)$rendezVous['statut'],
+            $rendezVous['motif_visite'],
+            new \DateTimeImmutable($rendezVous["date_creation"])
+        );
+    }
+
 }

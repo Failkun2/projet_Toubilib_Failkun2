@@ -13,7 +13,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/praticiens', ListerPraticiensAction::class);
     $app->get('/praticiens/{id}', PraticienByIdAction::class);
     $app->get('/praticiens/{id}/rdvs', PraticienRDVAction::class);
-  
+    $app->get('/rdvs/{id}', RendezVousByIdAction::class);
 
     return $app;
 };
