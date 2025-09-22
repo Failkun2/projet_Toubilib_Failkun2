@@ -11,4 +11,7 @@ return [
     PraticienByIdAction::class=> function (ContainerInterface $c) {
         return new PraticienByIdAction($c->get(ConsulterPraticienServiceInterface::class));
     },
+    PraticienRDVAction::class=> function (ContainerInterface $c) {
+        return new PraticienRDVAction($c->get(ServiceRendezVousInterface::class));
+    },
 ];

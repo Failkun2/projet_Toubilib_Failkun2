@@ -19,7 +19,7 @@ class PraticienByIdAction extends AbstractAction{
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
         $id = $args['id'] ?? null;
         if(!$id){
-            return new Response(400, [], json_encode(['erreur' => 'id de praticien invalide']));
+            return new Response(400, [], json_encode(['erreur' => 'id de praticien manquant']));
         }
         $pratitien = $this->service->afficherPraticien($id);
         $json = json_encode($pratitien->toArray(), JSON_PRETTY_PRINT);

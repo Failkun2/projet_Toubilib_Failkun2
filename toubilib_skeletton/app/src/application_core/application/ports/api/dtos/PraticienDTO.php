@@ -2,8 +2,6 @@
 
 namespace toubilib\core\application\ports\api\dtos;
 
-use toubilib\core\domain\entities\praticien\ServicePraticien as ServicePraticien;
-
 class PraticienDTO{
     private string $nom;
     private string $prenom;

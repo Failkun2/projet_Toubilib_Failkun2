@@ -15,12 +15,18 @@ return [
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
     PraticienRepositoryInterface::class=> function (ContainerInterface $c) {
-        return new praticienRepository($c->get(\PDO::class));
+        return new PraticienRepository($c->get(\PDO::class));
+    },
+    RendezVousRepositoryInterface::class=> function (ContainerInterface $c) {
+        return new RendezVousRepository($c->get(\PDO::class));
     },
     ServicePraticienInterface::class=> function (ContainerInterface $c) {
-        return new Servicepraticien($c->get(praticienRepositoryInterface::class));
+        return new Servicepraticien($c->get(PraticienRepositoryInterface::class));
     },
     ConsulterPraticienServiceInterface::class=> function (ContainerInterface $c) {
         return new ConsulterPraticienService($c->get(ConsulterPraticienServiceInterface::class));
+    },
+    ServiceRendezVousInterface::class=> function (ContainerInterface $c) {
+        return new ServiceRendezVous($c->get(RendezVousRepositoryInterface::class));
     },
 ];
