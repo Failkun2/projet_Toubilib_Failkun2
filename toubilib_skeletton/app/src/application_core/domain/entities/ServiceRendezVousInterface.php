@@ -3,5 +3,5 @@
 namespace toubilib\core\domain\entities;
 
 interface ServiceRendezVousInterface{
-    public function listerCrenaux() : array;
+    public function listerCrenaux(int $praticien_id, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : array;
 }
