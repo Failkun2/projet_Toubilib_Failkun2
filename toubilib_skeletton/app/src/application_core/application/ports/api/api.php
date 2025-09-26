@@ -1,7 +1,15 @@
 <?php
 
-use toubilib\core\domain\entities\praticien\ServicePraticienInterface as ServicePraticienInterface;
+use toubilib\core\domain\entities\ServicePraticienInterface as ServicePraticienInterface;
+use toubilib\core\domain\entities\ConsulterPraticienServiceInterface as ConsulterPraticienServiceInterface;
+use toubilib\core\domain\entities\ServiceRendezVousInterface as ServiceRendezVousInterface;
+use toubilib\core\domain\entities\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
 use toubilib\api\actions\ListerPraticiensAction as ListerPraticiensAction;
+use toubilib\api\actions\PraticienByIdAction as PraticienByIdAction;
+use toubilib\api\actions\PraticienRDVAction as PraticienRDVAction;
+use toubilib\api\actions\RendezVousByIdAction as RendezVousByIdAction;
+use toubilib\api\actions\CreateRendezVousAction as CreateRendezVousAction;
+
 use Psr\Container\ContainerInterface;
 
 return [
@@ -16,5 +24,8 @@ return [
     },
     RendezVousByIdAction::class=> function (ContainerInterface $c) {
         return new RendezVousByIdAction($c->get(ConsulterRendezVousServiceInterface::class));
+    },
+    CreateRendezVousAction::class=> function (ContainerInterface $c) {
+        return new CreateRendezVousAction($c->get(ServiceRendezVousInterface::class));
     },
 ];

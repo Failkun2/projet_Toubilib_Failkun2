@@ -1,10 +1,22 @@
 <?php
 
 use Psr\Container\ContainerInterface;
-use toubilib\core\application\ports\spi\repositoryInterfaces\praticienRepositoryInterface as praticienRepositoryInterface;
-use toubilib\core\domain\entities\praticien\praticienRepository as praticienRepository;
-use toubilib\core\domain\entities\ServicepraticienInterface as ServicepraticienInterface;
-use toubilib\core\application\usecases\Servicepraticien as Servicepraticien;
+use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface as PraticienRepositoryInterface;
+use toubilib\core\domain\entities\praticien\PraticienRepository as PraticienRepository;
+use toubilib\core\application\ports\spi\repositoryInterfaces\PatientRepositoryInterface as PatientRepositoryInterface;
+use toubilib\core\domain\entities\praticien\PatientRepository as PatientRepository;
+use toubilib\core\application\ports\spi\repositoryInterfaces\RendezVousRepositoryInterface as RendezVousRepositoryInterface;
+use toubilib\core\domain\entities\praticien\RendezVousRepository as RendezVousRepository;
+use toubilib\core\domain\entities\ServicePraticienInterface as ServicePraticienInterface;
+use toubilib\core\application\usecases\ServicePraticien as ServicePraticien;
+use toubilib\core\domain\entities\ServiceRendezVousInterface as ServiceRendezVousInterface;
+use toubilib\core\application\usecases\ServiceRendezVous as ServiceRendezVous;
+use toubilib\core\domain\entities\ConsulterPraticienServiceInterface as ConsulterPraticienServiceInterface;
+use toubilib\core\application\usecases\ConsulterPraticienService as ConsulterPraticienService;
+use toubilib\core\domain\entities\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
+use toubilib\core\application\usecases\ConsulterRendezVousService as ConsulterRendezVousService;
+use toubilib\api\middlewares\CreateRdvMiddleware as CreateRdvMiddleware;
+use toubilib\api\actions\CreateRendezVousAction as CreateRendezVousAction;
 
 return [
     \PDO::class => function(ContainerInterface $c){
@@ -27,9 +39,15 @@ return [
         return new ConsulterPraticienService($c->get(ConsulterPraticienServiceInterface::class));
     },
     ServiceRendezVousInterface::class=> function (ContainerInterface $c) {
-        return new ServiceRendezVous($c->get(RendezVousRepositoryInterface::class));
+        return new ServiceRendezVous(
+            $c->get(RendezVousRepositoryInterface::class),
+            $c->get(PraticienRepositoryInterface::class),
+            $c->get(PatientRepositoryInterface::class)
+        );
     },
     ConsulterRendezVousServiceInterface::class=> function (ContainerInterface $c) {
         return new ConsulterRendezVousService($c->get(ConsulterRendezVousServiceInterface::class));
     },
+    CreateRdvMiddleware::class => function($c){return new CreateRdvMiddleware();},
+    CreateRendezVousAction::class => function($c){return new CreateRendezVousAction($c->get(ServiceRendezVousInterface::class));}
 ];

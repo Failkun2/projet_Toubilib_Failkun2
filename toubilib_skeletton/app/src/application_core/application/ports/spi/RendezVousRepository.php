@@ -52,4 +52,42 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         );
     }
 
+    public function countOverlapping(String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : int{
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) AS cnt
+        FROM rdv
+        WHERE praticien_id = :id
+        AND NOT(
+            date_heure_debut <= :debut
+            OR date_heure_fin >= :fin
+        )");
+        $stmt->execute([
+            'praticien_id' => $praticienId,
+            'debut' => $debut->format('Y-m-d H-i-s'),
+            'fin' => $fin->format('Y-m-d H-i-s')
+        ]);
+        $rendezVous = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)($rendezvous['cnt'] ?? 0);
+    }
+
+    public function createRdv(array $rdv) : String{
+        $stmt = $this->pdo->prepare("INSERT INTO rdv
+        VALUES(:id, :praticienId, :patientId, :patientEmail, :dateDebut, :statut, :duree, :dateFin, :dateCreation, :motifVisite)");
+
+        $stmt->execute([
+            'id' => $rdv['id'],
+            'praticienId' => $rdv['praticienId'],
+            'patientId' => $rdv['patientId'],
+            'patientEmail' => $rdv['patientEmail'] ?? null,
+            'dateDebut' => $rdv['dateDebut']->format('Y-m-d H:i:s'),
+            'statut' => $rdv['statut'],
+            'duree' => $rdv['duree'],
+            'dateFin' => $rdv['dateFin']->format('Y-m-d H:i:s'),
+            'dateCreation' => $rdv['dateCreation']->format('Y-m-d H:i:s'),
+            'motifVisite' => $rdv['motifVisite']
+        ]);
+
+        return $rdv['id'];
+    }
+        
+
 }

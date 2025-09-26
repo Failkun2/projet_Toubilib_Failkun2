@@ -10,4 +10,5 @@ interface PraticienRepositoryInterface{
 
     public function findById(int $id) : Praticien;
 
+    public function findMotifsByPraticien(String $praticienId) : array;
 }

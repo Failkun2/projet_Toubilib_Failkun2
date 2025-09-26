@@ -20,7 +20,7 @@ class ListerRendezVousTest extends TestCase{
     }
 
     public function test_listerCrenaux(){
-        $res = $this->service->listerCrenaux('4305f5e9-be5a-4ccf-8792-7e07d7017363', new DateTimeImmutable('2025-12-01 16:00:00'), new DateTimeImmutable('2025-12-03 10:30:00'));
+        $res = $this->service->listerCrenaux('4305f5e9-be5a-4ccf-8792-7e07d7017363', new \DateTimeImmutable('2025-12-01 16:00:00'), new \DateTimeImmutable('2025-12-03 10:30:00'));
         $this->assertEquals(true, is_array($res));
         $this->assertEquals(true, count($res) > 0);
 

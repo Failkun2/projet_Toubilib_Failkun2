@@ -56,4 +56,17 @@ class PraticienRepository implements PraticienRepositoryInterface{
         );
     }
 
+    public function findMotifsByPraticien(String $praticienId) : array{
+        $stmt = $this->pdo->prepare("SELECT m.id, m.libelle
+        FROM motif_visite m JOIN praticien2motif pm ON m.id = pm.motif_id
+        WHERE pm.praticien_id = :praticien_id;");
+        $stmt->execute(['praticien-id' => $praticienId]);
+        $praticiens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(fn($praticien) => [
+            'id' => (int)$praticien['id'],
+            'libelle' => (int)$praticien['libelle'],
+        ], $praticiens);
+    }
+
 }
