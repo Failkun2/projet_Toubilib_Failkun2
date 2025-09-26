@@ -7,6 +7,10 @@ use toubilib\core\application\ports\api\dtos\RendezVousDTO as RendezVousDTO;
 use toubilib\core\application\ports\api\dtos\InputRendezVousDTO as InputRendezVousDTO;
 use toubilib\core\application\exceptions\ValidationException as ValidationException;
 use Ramsey\Uuid\Uuid;
+use toubilib\core\application\ports\spi\repositoryInterfaces\RendezVousRepositoryInterface as RendezVousRepositoryInterface;
+use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface as PraticienRepositoryInterface;
+use toubilib\core\application\ports\spi\repositoryInterfaces\PatientRepositoryInterface as PatientRepositoryInterface;
+use toubilib\core\application\exceptions\RendezVousInvalideException as RendezVousInvalideException;
 
 
 class ServiceRendezVous implements ServiceRendezVousInterface
@@ -95,5 +99,14 @@ class ServiceRendezVous implements ServiceRendezVousInterface
         $this->rdvRepository->createRdv($rdvData);
 
         return $id;
+    }
+
+    public function annulerRendezVous(String $idRdv) : void{
+        $rdv = $this->rdvRepository->findById($idRdv);
+        if(!$rdv){
+            throw new RendezVousInvalideException("Rendez Vous innexistant");
+        }
+        $rdv->annulerRendezVous();
+        $this->rdvRepository->updateStatut($idRdv, $rdv);
     }
 }

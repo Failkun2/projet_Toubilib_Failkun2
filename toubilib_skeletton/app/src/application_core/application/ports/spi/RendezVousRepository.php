@@ -89,5 +89,14 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         return $rdv['id'];
     }
         
+    public function updateStatut(String $id, RendezVous $rdv) : void{
+        $stmt = $this->pdo->prepare("UPDATE rdv
+        SET status = :statut
+        WHERE id = :id");
+        $stmt->execute([
+            'statut' => $rdv->__get("statut"),
+            'id' => $id
+        ]);
+    }
 
 }

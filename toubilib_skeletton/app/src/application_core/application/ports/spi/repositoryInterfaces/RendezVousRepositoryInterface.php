@@ -13,4 +13,6 @@ interface RendezVousRepositoryInterface{
     public function countOverlapping(String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : int;
 
     public function createRdv(array $rdv) : String;
+
+    public function updateStatut(String $id, RendezVous $rdv) : void;
 }

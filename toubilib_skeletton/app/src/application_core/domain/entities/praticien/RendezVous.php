@@ -2,6 +2,7 @@
 
 namespace toubilib\core\domain\entities\praticien;
 
+use toubilib\core\application\exceptions\RendezVousInvalideException as RendezVousInvalideException;
 
 class RendezVous
 {
@@ -47,5 +48,16 @@ class RendezVous
                 break;
         }
         return $res;
+    }
+
+    public function annulerRendezVous() : void{
+        if($this->statut === 2){
+            throw new RendezVousInvalideException("Le rendez vous est déjà annuler");
+        }
+        if($this->dateDebut < new \DateTimeImmutable()){
+            throw new RendezVousInvalideException("Le rendez vous est déjà passé");
+        }
+
+        $this->statut = 2;
     }
 }

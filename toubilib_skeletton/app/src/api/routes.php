@@ -9,7 +9,7 @@ use toubilib\api\actions\PraticienRDVAction as PraticienRDVAction;
 use toubilib\api\actions\CreateRendezVousAction as CreateRendezVousAction;
 use toubilib\api\actions\RendezVousByIdAction as RendezVousByIdAction;
 use toubilib\api\middlewares\CreateRdvMiddleware as CreateRdvMiddleware;
-
+use toubilib\api\middlewares\AnnulerRendezVousAction as AnnulerRendezVousAction;
 
 return function( \Slim\App $app):\Slim\App {
 
@@ -22,6 +22,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->post('/praticiens/{id}/rdvs', CreateRendezVousAction::class)
     ->add(CreateRdvMiddleware::class);
     $app->get('/rdvs/{id}', RendezVousByIdAction::class);
+    $app->delete('/rdvs/{id}', AnnulerRendezVousAction::class);
 
     return $app;
 };
