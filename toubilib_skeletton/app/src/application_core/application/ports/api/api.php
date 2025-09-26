@@ -10,6 +10,7 @@ use toubilib\api\actions\PraticienRDVAction as PraticienRDVAction;
 use toubilib\api\actions\RendezVousByIdAction as RendezVousByIdAction;
 use toubilib\api\actions\CreateRendezVousAction as CreateRendezVousAction;
 use toubilib\api\middlewares\AnnulerRendezVousAction as AnnulerRendezVousAction;
+use toubilib\api\middlewares\ConsulterAgendaAction as ConsulterAgendaAction;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -30,5 +31,8 @@ return [
     },
     AnnulerRendezVousAction::class=> function (ContainerInterface $c) {
         return new AnnulerRendezVousAction($c->get(ServiceRendezVousInterface::class));
+    },
+    ConsulterAgendaAction::class=> function (ContainerInterface $c) {
+        return new ConsulterAgendaAction($c->get(ServiceRendezVousInterface::class));
     },
 ];

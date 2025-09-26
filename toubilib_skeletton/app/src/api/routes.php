@@ -10,6 +10,8 @@ use toubilib\api\actions\CreateRendezVousAction as CreateRendezVousAction;
 use toubilib\api\actions\RendezVousByIdAction as RendezVousByIdAction;
 use toubilib\api\middlewares\CreateRdvMiddleware as CreateRdvMiddleware;
 use toubilib\api\middlewares\AnnulerRendezVousAction as AnnulerRendezVousAction;
+use toubilib\api\middlewares\ConsulterAgendaAction as ConsulterAgendaAction;
+
 
 return function( \Slim\App $app):\Slim\App {
 
@@ -23,6 +25,6 @@ return function( \Slim\App $app):\Slim\App {
     ->add(CreateRdvMiddleware::class);
     $app->get('/rdvs/{id}', RendezVousByIdAction::class);
     $app->delete('/rdvs/{id}', AnnulerRendezVousAction::class);
-
+    $app->get('/praticiens/{id}/agenda', ConsulterAgendaAction::class);
     return $app;
 };

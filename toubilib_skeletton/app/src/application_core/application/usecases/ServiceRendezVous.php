@@ -109,4 +109,30 @@ class ServiceRendezVous implements ServiceRendezVousInterface
         $rdv->annulerRendezVous();
         $this->rdvRepository->updateStatut($idRdv, $rdv);
     }
+
+    public function consulterAgenda(int $praticienId, \DateTimeImmutable $debut = null, \DateTimeImmutable $fin = null) : array{
+        if(!$debut){
+            $debut = new \DateTimeImmutable('today 08:00:00');
+        }
+        if(!$fin){
+            $fin = new \DateTimeImmutable('today 19:00:00');
+        }
+        $rdvs = $this->rdvRepository->findAgendaByPraticien($praticienId, $debut, $fin);
+        $result = [];
+        foreach($rdvs as $rdv){
+            $patient = $this->patientRepository->findById($rdv['patient_id']);
+            $praticien = $this->praticienRepository->findById($rdv['praticien_id']);
+            $result[] = [
+                'id' => $rdv['id'],
+                'dateDebut' => $rdv['date_heure_debut'],
+                'dateFin' => $rdv['date_heure_fin'],
+                'duree' => $rdv['duree'],
+                'statut' => $rdv['status'],
+                'motif_visite' => $rdv['motif_visite'],
+                'patient' => $patient,
+                'praticien' => $praticien
+            ];
+        }
+        return $result;
+    }
 }

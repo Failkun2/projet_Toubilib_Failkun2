@@ -33,6 +33,8 @@ class AnnulerRendezVousAction extends AbstractAction{
         } catch(RendezVousInvalideException $e){
             $rs->getBody()->write(json_encode(['erreur' => $e->getMessage()]));
             return $rs->withStatus(409)->withHeader('Content-Type', 'application/json');
+        } catch(\Throwable $t){
+            return new Response(500, ['Content-Type' => 'application/json'], json_encode(['erreur' => 'erreur serveur']));
         }
     }
 }

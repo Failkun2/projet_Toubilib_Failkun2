@@ -15,4 +15,6 @@ interface RendezVousRepositoryInterface{
     public function createRdv(array $rdv) : String;
 
     public function updateStatut(String $id, RendezVous $rdv) : void;
+    
+    public function findAgendaByPraticien(String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin): array;
 }

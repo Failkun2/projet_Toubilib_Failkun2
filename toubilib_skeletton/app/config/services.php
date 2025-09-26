@@ -18,6 +18,8 @@ use toubilib\core\application\usecases\ConsulterRendezVousService as ConsulterRe
 use toubilib\api\middlewares\CreateRdvMiddleware as CreateRdvMiddleware;
 use toubilib\api\actions\CreateRendezVousAction as CreateRendezVousAction;
 use toubilib\api\middlewares\AnnulerRendezVousAction as AnnulerRendezVousAction;
+use toubilib\api\middlewares\ConsulterAgendaAction as ConsulterAgendaAction;
+
 
 return [
     \PDO::class => function(ContainerInterface $c){
@@ -57,5 +59,8 @@ return [
     },
     AnnulerRendezVousAction::class => function(ContainerInterface $c){
         return new AnnulerRendezVousAction($c->get(ServiceRendezVousInterface::class));
+    },
+    ConsulterAgendaAction::class => function(ContainerInterface $c){
+        return new ConsulterAgendaAction($c->get(ServiceRendezVousInterface::class));
     }
 ];

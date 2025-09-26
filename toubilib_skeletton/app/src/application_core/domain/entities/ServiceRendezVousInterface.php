@@ -8,4 +8,6 @@ interface ServiceRendezVousInterface{
     public function creerRendezVous(InputRendezVousDTO $dto) : String;
 
     public function annulerRendezVous(String $idRdv) : void;
+
+    public function consulterAgenda(int $praticienId, \DateTimeImmutable $debut = null, \DateTimeImmutable $fin = null) : array;
 }

@@ -99,4 +99,18 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         ]);
     }
 
+
+    public function findAgendaByPraticien(String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin): array{
+        $stmt = $this->pdo->prepare("SELECT id, praticien_id, patient_id, date_heure_debut, date_heure_fin, duree, status, motif_visite
+        FROM rdv
+        WHERE praticien_id = :praticienId
+        AND date_heure_debut BETWEEN :debut AND :fin
+        ORDER BY date_heure_debut ASC");
+        $stmt->execute([
+            'praticienId' => $praticienId,
+            'debut' => $debut->format('Y-m-d H-i-s'),
+            'fin' => $fin->format('Y-m-d H-i-s')
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
