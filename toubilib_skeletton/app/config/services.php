@@ -22,18 +22,35 @@ use toubilib\api\middlewares\ConsulterAgendaAction as ConsulterAgendaAction;
 
 
 return [
-    \PDO::class => function(ContainerInterface $c){
+    \PDO::class . '.praticien' => function(ContainerInterface $c){
         $config = parse_ini_file($c->get('toubiprat.db.conf'));
         $dsn = "{$config['driver']}:host={$config['host']};dbname={$config['database']}";
         $user = $config['username'];
         $password = $config['password'];
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
+    \PDO::class . '.patient' => function(ContainerInterface $c){
+        $config = parse_ini_file($c->get('toubipat.db.conf'));
+        $dsn = "{$config['driver']}:host={$config['host']};dbname={$config['database']}";
+        $user = $config['username'];
+        $password = $config['password'];
+        return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    },
+    \PDO::class . '.rdv' => function(ContainerInterface $c){
+        $config = parse_ini_file($c->get('toubirdv.db.conf'));
+        $dsn = "{$config['driver']}:host={$config['host']};dbname={$config['database']}";
+        $user = $config['username'];
+        $password = $config['password'];
+        return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    },
     PraticienRepositoryInterface::class=> function (ContainerInterface $c) {
-        return new PraticienRepository($c->get(\PDO::class));
+        return new PraticienRepository($c->get(\PDO::class . '.praticien'));
+    },
+    PatientRepositoryInterface::class=> function (ContainerInterface $c) {
+        return new PatientRepository($c->get(\PDO::class . '.patient'));
     },
     RendezVousRepositoryInterface::class=> function (ContainerInterface $c) {
-        return new RendezVousRepository($c->get(\PDO::class));
+        return new RendezVousRepository($c->get(\PDO::class . '.rdv'));
     },
     ServicePraticienInterface::class=> function (ContainerInterface $c) {
         return new Servicepraticien($c->get(PraticienRepositoryInterface::class));
