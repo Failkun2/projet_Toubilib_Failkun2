@@ -16,10 +16,10 @@ class RendezVousDTO{
         $this->duree = $duree;
         $this->statut = $statut;
         $this->motifVisite = $motifVisite;
-        $this->dateCreation = $dateCreation;
+        $this->dateCreation = $dateCreation ?? new \DateTimeImmutable();
     }
 
-    public function Serialise_JSON() : array{
+    public function serialise_JSON() : array{
         return[
             'dateDebut' => $this->dateDebut,
             'dateFin' => $this->dateFin,

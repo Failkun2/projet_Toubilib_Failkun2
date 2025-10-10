@@ -2,11 +2,11 @@
 
 use Psr\Container\ContainerInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface as PraticienRepositoryInterface;
-use toubilib\core\domain\entities\praticien\PraticienRepository as PraticienRepository;
+use toubilib\core\application\ports\spi\PraticienRepository as PraticienRepository;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PatientRepositoryInterface as PatientRepositoryInterface;
-use toubilib\core\domain\entities\praticien\PatientRepository as PatientRepository;
+use toubilib\core\application\ports\spi\PatientRepository as PatientRepository;
 use toubilib\core\application\ports\spi\repositoryInterfaces\RendezVousRepositoryInterface as RendezVousRepositoryInterface;
-use toubilib\core\domain\entities\praticien\RendezVousRepository as RendezVousRepository;
+use toubilib\core\application\ports\spi\RendezVousRepository as RendezVousRepository;
 use toubilib\core\domain\entities\ServicePraticienInterface as ServicePraticienInterface;
 use toubilib\core\application\usecases\ServicePraticien as ServicePraticien;
 use toubilib\core\domain\entities\ServiceRendezVousInterface as ServiceRendezVousInterface;
@@ -23,23 +23,33 @@ use toubilib\api\middlewares\ConsulterAgendaAction as ConsulterAgendaAction;
 
 return [
     \PDO::class . '.praticien' => function(ContainerInterface $c){
-        $config = parse_ini_file($c->get('toubiprat.db.conf'));
-        $dsn = "{$config['driver']}:host={$config['host']};dbname={$config['database']}";
-        $user = $config['username'];
+        $chemin = __DIR__ . DIRECTORY_SEPARATOR . 'toubiprat.db.ini';
+        //print $chemin;
+        $config = parse_ini_file($chemin);
+        if (!$config) {
+            echo "❌ parse_ini_file a échoué ! Vérifie ton format .ini";
+        } else {
+            //print_r($config);
+        }
+        $dsn = "{$config['driver']}:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
+        //print $dsn;
+        $user = $config['user'];
         $password = $config['password'];
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
     \PDO::class . '.patient' => function(ContainerInterface $c){
-        $config = parse_ini_file($c->get('toubipat.db.conf'));
-        $dsn = "{$config['driver']}:host={$config['host']};dbname={$config['database']}";
-        $user = $config['username'];
+        $chemin = __DIR__ . '\toubipat.db.ini';
+        $config = parse_ini_file($chemin);
+        $dsn = "{$config['driver']}:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
+        $user = $config['user'];
         $password = $config['password'];
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
     \PDO::class . '.rdv' => function(ContainerInterface $c){
-        $config = parse_ini_file($c->get('toubirdv.db.conf'));
-        $dsn = "{$config['driver']}:host={$config['host']};dbname={$config['database']}";
-        $user = $config['username'];
+        $chemin = __DIR__ . '\toubirdv.db.ini';
+        $config = parse_ini_file($chemin);
+        $dsn = "{$config['driver']}:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
+        $user = $config['user'];
         $password = $config['password'];
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
@@ -56,7 +66,7 @@ return [
         return new Servicepraticien($c->get(PraticienRepositoryInterface::class));
     },
     ConsulterPraticienServiceInterface::class=> function (ContainerInterface $c) {
-        return new ConsulterPraticienService($c->get(ConsulterPraticienServiceInterface::class));
+        return new ConsulterPraticienService($c->get(PraticienRepositoryInterface::class));
     },
     ServiceRendezVousInterface::class=> function (ContainerInterface $c) {
         return new ServiceRendezVous(
@@ -66,7 +76,7 @@ return [
         );
     },
     ConsulterRendezVousServiceInterface::class=> function (ContainerInterface $c) {
-        return new ConsulterRendezVousService($c->get(ConsulterRendezVousServiceInterface::class));
+        return new ConsulterRendezVousService($c->get(RendezVousRepositoryInterface::class));
     },
     CreateRdvMiddleware::class => function(ContainerInterface $c){
         return new CreateRdvMiddleware();

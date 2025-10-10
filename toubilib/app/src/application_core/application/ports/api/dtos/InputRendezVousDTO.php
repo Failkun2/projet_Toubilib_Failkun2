@@ -9,7 +9,7 @@ class InputRendezVousDTO{
     private int $duree;
     private String $motifVisite;
 
-    public function __construct(String $praticienId, String $patientId, DateTimeImmutable $dateDebut, int $duree, String $motifVisite){
+    public function __construct(String $praticienId, String $patientId, \DateTimeImmutable $dateDebut, int $duree, String $motifVisite){
         $this->praticienId = $praticienId;
         $this->patientId = $patientId;
         $this->dateDebut = $dateDebut;

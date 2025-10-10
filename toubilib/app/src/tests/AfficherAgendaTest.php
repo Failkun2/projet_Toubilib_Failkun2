@@ -21,7 +21,7 @@ class AfficherAgendaTest extends TestCase{
 
     public function test_listerCrenaux(){
         $agenda = $this->service->consulterAgenda('4305f5e9-be5a-4ccf-8792-7e07d7017363', new \DateTimeImmutable('2025-12-01 8:00:00'), new \DateTimeImmutable('2025-12-03 10:30:00'));
-        $this->assertEquals(true, is_array($res));
+        $this->assertEquals(true, is_array($agenda));
 
         foreach($agenda as $rdv){
             $this->AssertArrayHasKey('patient', $rdv);

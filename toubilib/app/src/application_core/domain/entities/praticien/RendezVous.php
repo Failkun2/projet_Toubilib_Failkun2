@@ -20,7 +20,7 @@ class RendezVous
         $this->duree = $duree;
         $this->statut = $statut;
         $this->motifVisite = $motifVisite;
-        $this->dateCreation = $dateCreation;
+        $this->dateCreation = $dateCreation ?? new \DateTimeImmutable();
     }
 
     public function __get($attribut){

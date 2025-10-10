@@ -16,7 +16,7 @@ class ConsulterPraticienService implements ConsulterPraticienServiceInterface
         $this->praticienRepository = $praticienRepository;
     }
 
-    public function afficherPraticien(int $id): PraticienDTO {
+    public function afficherPraticien(String $id): PraticienDTO {
     	$praticien = $this->praticienRepository->findById($id);
 
         return new PraticienDTO(

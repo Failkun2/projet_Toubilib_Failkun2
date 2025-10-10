@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '\..\..\vendor\autoload.php';
 use PHPUnit\Framework\TestCase;
 use toubilib\core\domain\entities\ServicePraticienInterface as ServicePraticienInterface;
 use DI\Container;

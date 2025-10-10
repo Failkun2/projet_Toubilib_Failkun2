@@ -20,7 +20,7 @@ class AfficherPraticienTest extends TestCase{
     }
 
     public function test_afficherPraticien(){
-        $res = $this->service->afficherPraticiens('4305f5e9-be5a-4ccf-8792-7e07d7017363');
+        $res = $this->service->afficherPraticien('4305f5e9-be5a-4ccf-8792-7e07d7017363');
         $this->assertEquals(false, is_null($res));
         $praticien = $res->serialise_JSON();
 
@@ -39,8 +39,8 @@ class AfficherPraticienTest extends TestCase{
         $this->assertEquals(true, isset($praticien['adresse']));
         print($praticien['adresse']);
         $this->assertEquals(true, isset($praticien['motifs']));
-        print($praticien['motifs']);
+        print_r($praticien['motifs']);
         $this->assertEquals(true, isset($praticien['moyensPaiement']));
-        print($praticien['moyensPaiement']);
+        print_r($praticien['moyensPaiement']);
     }
 }

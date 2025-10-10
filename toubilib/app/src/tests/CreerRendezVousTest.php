@@ -26,7 +26,7 @@ class CreerRendezVousTest extends TestCase{
             'd975aca7-50c5-3d16-b211-cf7d302cba50',
             new \DateTimeImmutable('tomorrow 10:00'),
             30,
-            'scanner'
+            'radiologie'
         );
         $rdvId = $this->service->creerRendezVous($dto);
         $this->assertNotNull($rdvId);   

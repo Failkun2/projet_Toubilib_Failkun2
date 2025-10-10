@@ -27,8 +27,8 @@ class ListerRendezVousTest extends TestCase{
         $rdv = $res[0]->serialise_JSON();
 
         $this->assertEquals(true, isset($rdv['dateDebut']));
-        print($praticien['dateDebut']);
+        //print_r($praticien['dateDebut']);
         $this->assertEquals(true, isset($rdv['dateFin']));
-        print($rdv['dateFin']);
+        //print_r($rdv['dateFin']);
     }
 }

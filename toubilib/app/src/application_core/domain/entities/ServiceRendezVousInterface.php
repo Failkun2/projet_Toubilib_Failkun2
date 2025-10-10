@@ -2,12 +2,14 @@
 
 namespace toubilib\core\domain\entities;
 
+use toubilib\core\application\ports\api\dtos\InputRendezVousDTO as InputRendezVousDTO;
+
 interface ServiceRendezVousInterface{
-    public function listerCrenaux(int $praticien_id, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : array;
+    public function listerCrenaux(String $praticien_id, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : array;
 
     public function creerRendezVous(InputRendezVousDTO $dto) : String;
 
     public function annulerRendezVous(String $idRdv) : void;
 
-    public function consulterAgenda(int $praticienId, \DateTimeImmutable $debut = null, \DateTimeImmutable $fin = null) : array;
+    public function consulterAgenda(String $praticienId, \DateTimeImmutable $debut = null, \DateTimeImmutable $fin = null) : array;
 }

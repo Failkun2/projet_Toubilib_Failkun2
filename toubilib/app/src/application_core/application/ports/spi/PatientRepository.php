@@ -14,7 +14,7 @@ class PatientRepository implements PatientRepositoryInterface{
         $this->pdo = $pdo;
     }
     
-    public function findById(int $id) : Patient{
+    public function findById(String $id) : Patient{
         $stmt = $this->pdo->prepare("SELECT p.nom, p.prenom, p.date_naissance, p.email, p.telephone
         FROM patient p 
         WHERE p.id = :id

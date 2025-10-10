@@ -2,10 +2,10 @@
 
 namespace toubilib\core\application\ports\spi\repositoryInterfaces;
 
-use toubilib\core\domain\entities\praticien\Patient as Patient;
+use toubilib\core\domain\entities\patient\Patient as Patient;
 
 interface PatientRepositoryInterface{
     
-    public function findById(int $id) : Patient;
+    public function findById(String $id) : Patient;
 
 }

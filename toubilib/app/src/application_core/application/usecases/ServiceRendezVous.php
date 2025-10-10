@@ -27,7 +27,7 @@ class ServiceRendezVous implements ServiceRendezVousInterface
         $this->patientRepository = $patientRepository;
     }
 
-    public function listerCrenaux(int $praticien_id, \DateTimeImmutable $debut, \DateTimeImmutable $fin): array {
+    public function listerCrenaux(String $praticien_id, \DateTimeImmutable $debut, \DateTimeImmutable $fin): array {
     	$rendezVous = $this->rdvRepository->findRDVByPraticienPeriod($praticien_id, $debut, $fin);
 
         return array_map(function($rdv){
@@ -52,10 +52,12 @@ class ServiceRendezVous implements ServiceRendezVousInterface
         }
 
         $motifs = $this->praticienRepository->findMotifsByPraticien($dto->__get('praticienId'));
-        if(!in_array($dto->__get('motifVisite'), $motifs, true)){
+        $libelles = array_column($motifs, 'libelle');
+        if(!in_array($dto->__get('motifVisite'), $libelles, true)){
             $errors['motifVisite'] = 'motif introuvable';
         }
 
+        $duree = $dto->__get('duree');
         $debut = $dto->__get('dateDebut');
         $fin = $debut->modify("+{$duree} minutes");
         $jour = (int)$debut->format('N');
@@ -85,12 +87,12 @@ class ServiceRendezVous implements ServiceRendezVousInterface
 
         $rdvData = [
             'id' => $id,
-            'praticienId' => __get('praticienId'),
-            'patientId' => __get('patientId'),
+            'praticienId' => $dto->__get('praticienId'),
+            'patientId' => $dto->__get('patientId'),
             'patientEmail' => $patient->__get('email'),
             'dateDebut' => $debut,
             'dateFin' => $fin,
-            'duree' => __get('duree'),
+            'duree' => $dto->__get('duree'),
             'statut' => 0,
             'motifVisite' => $dto->__get('motifVisite'),
             'dateCreation' => new \DateTimeImmutable()
@@ -110,7 +112,7 @@ class ServiceRendezVous implements ServiceRendezVousInterface
         $this->rdvRepository->updateStatut($idRdv, $rdv);
     }
 
-    public function consulterAgenda(int $praticienId, \DateTimeImmutable $debut = null, \DateTimeImmutable $fin = null) : array{
+    public function consulterAgenda(String $praticienId, \DateTimeImmutable $debut = null, \DateTimeImmutable $fin = null) : array{
         if(!$debut){
             $debut = new \DateTimeImmutable('today 08:00:00');
         }

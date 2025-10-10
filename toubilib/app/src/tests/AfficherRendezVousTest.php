@@ -22,19 +22,19 @@ class AfficherRendezVousTest extends TestCase{
     public function test_afficherPraticien(){
         $res = $this->service->afficherRendezVous('2e1a7275-2593-3c04-9a4c-4e7cbada9541');
         $this->assertEquals(false, is_null($res));
-        $rdv = $res->serialise_JSON();
+        $rdv = $res->serialise_JSON(); 
 
-        $this->assertEquals(true, isset($praticien['dateDebut']));
-        print($praticien['dateDebut']);
-        $this->assertEquals(true, isset($praticien['dateFin']));
-        print($praticien['dateFin']);
-        $this->assertEquals(true, isset($praticien['duree']));
-        print($praticien['duree']);
-        $this->assertEquals(true, isset($praticien['statut']));
-        print($praticien['statut']);
-        $this->assertEquals(true, isset($praticien['motifVisite']));
-        print($praticien['motifVisite']);
-        $this->assertEquals(true, isset($praticien['dateCreation']));
-        print($praticien['dateCreation']);
+        $this->assertEquals(true, isset($rdv['dateDebut']));
+        print_r($rdv['dateDebut']);
+        $this->assertEquals(true, isset($rdv['dateFin']));
+        print_r($rdv['dateFin']);
+        $this->assertEquals(true, isset($rdv['duree']));
+        print $rdv['duree'];
+        $this->assertEquals(true, isset($rdv['statut']));
+        print $rdv['statut'];
+        $this->assertEquals(true, isset($rdv['motifVisite']));
+        print $rdv['motifVisite'];
+        $this->assertEquals(true, isset($rdv['dateCreation']));
+        print_r($rdv['dateCreation']);
     }
 }

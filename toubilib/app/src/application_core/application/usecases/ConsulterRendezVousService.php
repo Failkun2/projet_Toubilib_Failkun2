@@ -16,10 +16,10 @@ class ConsulterRendezVousService implements ConsulterRendezVousServiceInterface
         $this->rdvRepository = $rdvRepository;
     }
 
-    public function afficherPraticien(int $id): PraticienDTO {
+    public function afficherRendezVous(String $id) : RendezVousDTO {
     	$rdv = $this->rdvRepository->findById($id);
 
-        return new PraticienDTO(
+        return new RendezVousDTO(
             $rdv->__get("dateDebut"),
             $rdv->__get("dateFin"),
             $rdv->__get("duree"),

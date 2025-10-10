@@ -14,7 +14,7 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         $this->pdo = $pdo;
     }
 
-    public function findRDVByPraticienPeriod(int $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin): array{
+    public function findRDVByPraticienPeriod(String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin): array{
         $stmt = $this->pdo->prepare("SELECT date_heure_debut, date_heure_fin 
         FROM rdv
         WHERE praticien_id = :praticien_id
@@ -23,12 +23,14 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         ORDER BY date_heure_debut ASC;");
         $stmt->execute([
             'praticien_id' => $praticienId,
-            'debut' => $debut->format('Y-m-d H-i-s'),
-            'fin' => $fin->format('Y-m-d H-i-s')
+            'debut' => $debut->format('Y-m-d H:i:s'),
+            'fin' => $fin->format('Y-m-d H:i:s')
         ]);
         $rendezVous = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(function($rdv){
+            //print_r($rdv["date_heure_debut"]);
+            //print_r($rdv["date_heure_fin"]);
             return new RendezVous(
                 new \DateTimeImmutable($rdv["date_heure_debut"]),
                 new \DateTimeImmutable($rdv["date_heure_fin"])
@@ -36,8 +38,8 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         }, $rendezVous);
     }
 
-    public function findById(int $id): RendezVous{
-        $stmt = $this->pdo->prepare("SELECT date_heure_debut, date_heure_fin, duree, statut, motif_visite, date_creation 
+    public function findById(String $id): RendezVous{
+        $stmt = $this->pdo->prepare("SELECT date_heure_debut, date_heure_fin, duree, status, motif_visite, date_creation 
         FROM rdv
         WHERE id = :id");
         $stmt->execute(['id' => $id,]);
@@ -46,7 +48,7 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
             new \DateTimeImmutable($rendezVous["date_heure_debut"]),
             new \DateTimeImmutable($rendezVous["date_heure_fin"]),
             (int)$rendezVous['duree'],
-            (int)$rendezVous['statut'],
+            (int)$rendezVous['status'],
             $rendezVous['motif_visite'],
             new \DateTimeImmutable($rendezVous["date_creation"])
         );
@@ -55,15 +57,15 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
     public function countOverlapping(String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : int{
         $stmt = $this->pdo->prepare("SELECT COUNT(*) AS cnt
         FROM rdv
-        WHERE praticien_id = :id
+        WHERE praticien_id = :praticien_id
         AND NOT(
             date_heure_debut <= :debut
             OR date_heure_fin >= :fin
         )");
         $stmt->execute([
             'praticien_id' => $praticienId,
-            'debut' => $debut->format('Y-m-d H-i-s'),
-            'fin' => $fin->format('Y-m-d H-i-s')
+            'debut' => $debut->format('Y-m-d H:i:s'),
+            'fin' => $fin->format('Y-m-d H:i:s')
         ]);
         $rendezVous = $stmt->fetch(PDO::FETCH_ASSOC);
         return (int)($rendezvous['cnt'] ?? 0);
@@ -108,8 +110,8 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         ORDER BY date_heure_debut ASC");
         $stmt->execute([
             'praticienId' => $praticienId,
-            'debut' => $debut->format('Y-m-d H-i-s'),
-            'fin' => $fin->format('Y-m-d H-i-s')
+            'debut' => $debut->format('Y-m-d H:i:s'),
+            'fin' => $fin->format('Y-m-d H:i:s')
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
