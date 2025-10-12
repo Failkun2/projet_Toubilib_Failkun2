@@ -21,9 +21,21 @@ class RendezVousByIdAction extends AbstractAction{
         if(!$id){
             return new Response(400, [], json_encode(['erreur' => 'id de rdv manquant']));
         }
-        $rdv = $this->service->afficherRendezVous($id);
-        $json = json_encode($rdv->toArray(), JSON_PRETTY_PRINT);
-        $rs->getBody()->write($json);
-        return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
+        try{
+            $rdv = $this->service->afficherRendezVous($id);
+            $body = [
+                'rdv' => $rdv->toArray(),
+                '_links' => [
+                    'self' => ['href' => "/rdvs/{$id}"],
+                    'annuler' => ['href' => "/rdvs/{$id}/annuler", 'method' => 'PATCH'],
+                    'praticien' => ['href' => "/praticiens/{$rdv->__get('praticienId')}"]
+                ]
+            ];
+            $json = json_encode($body, JSON_PRETTY_PRINT);
+            $rs->getBody()->write($json);
+            return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
+        } catch(\Throwable $e){
+            return new Response(404, [], json_encode(['erreur' => 'rdv introuvable']));
+        }
     }
 }

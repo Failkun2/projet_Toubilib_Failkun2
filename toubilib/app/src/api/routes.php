@@ -9,13 +9,14 @@ use toubilib\api\actions\PraticienRDVAction as PraticienRDVAction;
 use toubilib\api\actions\CreateRendezVousAction as CreateRendezVousAction;
 use toubilib\api\actions\RendezVousByIdAction as RendezVousByIdAction;
 use toubilib\api\middlewares\CreateRdvMiddleware as CreateRdvMiddleware;
-use toubilib\api\middlewares\AnnulerRendezVousAction as AnnulerRendezVousAction;
-use toubilib\api\middlewares\ConsulterAgendaAction as ConsulterAgendaAction;
+use toubilib\api\middlewares\Cors as Cors;
+use toubilib\api\actions\AnnulerRendezVousAction as AnnulerRendezVousAction;
+use toubilib\api\actions\ConsulterAgendaAction as ConsulterAgendaAction;
 
 
 return function( \Slim\App $app):\Slim\App {
 
-
+    $app->add(Cors::class);
 
     $app->get('/', HomeAction::class);
     $app->get('/praticiens', ListerPraticiensAction::class);
@@ -24,7 +25,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->post('/praticiens/{id}/rdvs', CreateRendezVousAction::class)
     ->add(CreateRdvMiddleware::class);
     $app->get('/rdvs/{id}', RendezVousByIdAction::class);
-    $app->delete('/rdvs/{id}', AnnulerRendezVousAction::class);
+    $app->patch('/rdvs/{id}/annuler', AnnulerRendezVousAction::class);
     $app->get('/praticiens/{id}/agenda', ConsulterAgendaAction::class);
     return $app;
 };

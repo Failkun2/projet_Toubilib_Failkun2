@@ -25,7 +25,13 @@ class AnnulerRendezVousAction extends AbstractAction{
         }
         try{
             $this->service->annulerRendezVous($id);
-            $rs->getBody()->write(json_encode(['message' => 'Rendez Vous annuler']));
+            $rs->getBody()->write(json_encode([
+                'message' => 'Rendez Vous annuler', 
+                '_links' => [
+                    'self' => ['href' => "/rdvs/$id"],
+                    'praticiens' => ['href' => '/praticiens'],
+                    'creer' => ['href' => "/rdvs", 'method' => 'POST']
+                ]]));
             return $rs->withStatus(200)->withHeader('Content-Type', 'application/json');
         } catch(RendezVousIntrouvableException $e){
             $rs->getBody()->write(json_encode(['erreur' => $e->getMessage()]));

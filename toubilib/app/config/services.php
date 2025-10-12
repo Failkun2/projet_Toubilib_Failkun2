@@ -24,15 +24,8 @@ use toubilib\api\middlewares\ConsulterAgendaAction as ConsulterAgendaAction;
 return [
     \PDO::class . '.praticien' => function(ContainerInterface $c){
         $chemin = __DIR__ . DIRECTORY_SEPARATOR . 'toubiprat.db.ini';
-        //print $chemin;
         $config = parse_ini_file($chemin);
-        if (!$config) {
-            echo "❌ parse_ini_file a échoué ! Vérifie ton format .ini";
-        } else {
-            //print_r($config);
-        }
         $dsn = "{$config['driver']}:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
-        //print $dsn;
         $user = $config['user'];
         $password = $config['password'];
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);

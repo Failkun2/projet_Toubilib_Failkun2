@@ -18,7 +18,14 @@ class ListerPraticiensAction extends AbstractAction{
 
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
         $praticiens = $this->service->listerPraticiens();
-        $json = json_encode($praticiens, JSON_PRETTY_PRINT);
+        $body = [
+            'praticiens' => $praticiens,
+            '_links' => [
+                'self' => ['href' => '/praticiens'],
+                'creer' => ['href' => '/rdvs', 'method' => 'POST'] 
+            ]
+        ];
+        $json = json_encode($body, JSON_PRETTY_PRINT);
         $rs->getBody()->write($json);
         return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
     }

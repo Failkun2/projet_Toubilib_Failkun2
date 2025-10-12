@@ -19,13 +19,27 @@ class ConsulterAgendaAction extends AbstractAction{
     }
 
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
-        $praticienId = $args['id'];
-        
+        $praticienId = $args['id'] ?? null;
         $query = $rq->getQueryParams();
-        $debut = isset($query['debut']) ? new \DateTimeImmutable($query['debut']) : null;
-        $fin = isset($query['fin']) ? new \DateTimeImmutable($query['fin']) : null;
+        if(!$praticienId){
+            return $this->jsonResponse($rs, ['erreur' => 'ID praticien manquant'], 400);
+        }
+        try{
+            $debut = isset($query['debut']) ? new \DateTimeImmutable($query['debut']) : null;
+            $fin = isset($query['fin']) ? new \DateTimeImmutable($query['fin']) : null;
+        }
         $agenda = $this->service->consulterAgenda($praticienId, $debut, $fin);
-        $rs->getBody()->write(json_encode($agenda));
+        $body = [
+            'praticienId' => $praticienId,
+            'agenda' => $agenda,
+            '_links' => [
+                'self' => ['href' => "/praticiens/$praticienId/agenda"],
+                'praticien' => ['href' => "/praticiens/$praticienId"],
+                'rdvs' => ['href' => "/praticiens/$praticienId/rdvs"],
+                'creer' => ['href' => '/rdvs', 'method' => 'POST']
+            ]
+        ];
+        $rs->getBody()->write(json_encode($body));
         return $rs->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
 }

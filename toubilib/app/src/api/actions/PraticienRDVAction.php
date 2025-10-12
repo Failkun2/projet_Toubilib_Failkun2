@@ -29,7 +29,15 @@ class PraticienRDVAction extends AbstractAction{
             return new Response(400, [], json_encode(['erreur' => 'dates invalides']));
         }
         $rdvs = $this->service->listerCrenaux($id, $debut, $fin);
-        $json = json_encode($rdvs->toArray(), JSON_PRETTY_PRINT);
+        $body = [
+            'rdvs' => $rdvs->toArray(),
+            '_links' => [
+                'self' => ['href' => "/praticiens/{$id}/rdvs?debut={$debut->format('Y-m-d')}&fin={$fin->format('Y-m-d')}"],
+                'agenda' => ['href' => "/praticiens/{$id}/agenda"],
+                'praticien' => ['href' => "/praticiens/{$id}"]
+            ]
+        ];
+        $json = json_encode($body, JSON_PRETTY_PRINT);
         $rs->getBody()->write($json);
         return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
     }

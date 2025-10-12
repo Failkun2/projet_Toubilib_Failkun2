@@ -11,9 +11,9 @@ use toubilib\core\application\exceptions\ValidationException as ValidationExcept
 
 class CreateRendezVousAction extends AbstractAction{
 
-    private ConsulterRendezVousServiceInterface $service;
+    private ServiceRendezVousInterface $service;
 
-    public function __construct(ConsulterRendezVousServiceInterface $service){
+    public function __construct(ServiceRendezVousInterface $service){
         $this->service = $service;
     }
 
@@ -25,12 +25,20 @@ class CreateRendezVousAction extends AbstractAction{
         try{
             $newId = $this->service->creerRendezVous($dto);
         }catch(ValidationException $ve){
-            return new Response($ve->getCode() ?: 422, ['Content-Type' => 'application/json'], json_encode(['erreur' => $ve->getErrors()]));
+            return new Response(422, ['Content-Type' => 'application/json'], json_encode(['erreur' => $ve->getErrors()]));
         }catch(\Throwable $t){
             return new Response(500, ['Content-Type' => 'application/json'], json_encode(['erreur' => 'erreur serveur']));
         }
         
-        $payload = ['id' => $newId];
+        $payload = [
+            'id' => $newId,
+            'message' => 'Rendez-vous créer',
+            '_links' => [
+                'self' => ['href' => "/rdvs/$newId"],
+                'annuler' => ['href' => "/rdvs/$newId/annuler", 'method' => 'PATCH'],
+                'praticiens' => ['href' => '/praticiens']
+            ]
+        ];
         $location = '/rdvs/' . $newId;
 
         return new Response(201, ['Content-Type' => 'application/json', 'Location' => $location], json_encode($payload));

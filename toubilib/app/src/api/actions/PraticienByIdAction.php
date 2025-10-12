@@ -22,7 +22,16 @@ class PraticienByIdAction extends AbstractAction{
             return new Response(400, [], json_encode(['erreur' => 'id de praticien manquant']));
         }
         $pratitien = $this->service->afficherPraticien($id);
-        $json = json_encode($pratitien->toArray(), JSON_PRETTY_PRINT);
+        $body = [
+            'praticien' => $pratitien->toArray(),
+            '_links' => [
+                'self' => ['href' => "/praticiens/{$id}"],
+                'rdvs' => ['href' => "/praticiens/{$id}/rdvs"],
+                'agenda' => ['href' => "/praticiens/{$id}/agenda"],
+                'collection' => ['href' => '/praticiens']
+            ] 
+        ];
+        $json = json_encode($body, JSON_PRETTY_PRINT);
         $rs->getBody()->write($json);
         return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
     }
