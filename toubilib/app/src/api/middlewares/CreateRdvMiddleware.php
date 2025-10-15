@@ -11,7 +11,7 @@ use toubilib\core\application\ports\api\dtos\InputRendezVousDTO as InputRendezVo
 
 
 class CreateRdvMiddleware extends MiddlewareInterface{
-    public function process(ServerRequestInterface $rq, RequestHanderInterface $rh) : ResponseInterface{
+    public function process(ServerRequestInterface $rq, RequestHanderInterface $rh) : Response{
         $contentType = $rq->getHeaderLine('Content-Type');
         $body = (String)$rq->getBody();
 

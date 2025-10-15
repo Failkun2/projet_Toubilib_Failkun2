@@ -1,8 +1,8 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use toubilib\core\domain\entities\ServiceRendezVousInterface as ServiceRendezVousInterface;
-use toubilib\core\domain\entities\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
+use toubilib\core\application\ports\ServiceRendezVousInterface as ServiceRendezVousInterface;
+use toubilib\core\application\ports\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
 use DI\Container;
 use toubilib\core\application\ports\api\dtos\InputRendezVousDTO as InputRendezVousDTO;
 

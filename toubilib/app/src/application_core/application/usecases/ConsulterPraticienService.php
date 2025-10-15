@@ -2,7 +2,7 @@
 
 namespace toubilib\core\application\usecases;
 
-use toubilib\core\domain\entities\ConsulterPraticienServiceInterface as ConsulterPraticienServiceInterface;
+use toubilib\core\application\ports\ConsulterPraticienServiceInterface as ConsulterPraticienServiceInterface;
 use toubilib\core\application\ports\api\dtos\PraticienDTO as PraticienDTO;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface as PraticienRepositoryInterface;
 

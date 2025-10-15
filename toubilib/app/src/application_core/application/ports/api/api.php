@@ -1,16 +1,19 @@
 <?php
 
-use toubilib\core\domain\entities\ServicePraticienInterface as ServicePraticienInterface;
-use toubilib\core\domain\entities\ConsulterPraticienServiceInterface as ConsulterPraticienServiceInterface;
-use toubilib\core\domain\entities\ServiceRendezVousInterface as ServiceRendezVousInterface;
-use toubilib\core\domain\entities\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
+use toubilib\core\application\ports\ServicePraticienInterface as ServicePraticienInterface;
+use toubilib\core\application\ports\ConsulterPraticienServiceInterface as ConsulterPraticienServiceInterface;
+use toubilib\core\application\ports\ServiceRendezVousInterface as ServiceRendezVousInterface;
+use toubilib\core\application\ports\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
+use toubilib\core\application\ports\AuthnServiceInterface as AuthnServiceInterface;
 use toubilib\api\actions\ListerPraticiensAction as ListerPraticiensAction;
 use toubilib\api\actions\PraticienByIdAction as PraticienByIdAction;
 use toubilib\api\actions\PraticienRDVAction as PraticienRDVAction;
 use toubilib\api\actions\RendezVousByIdAction as RendezVousByIdAction;
 use toubilib\api\actions\CreateRendezVousAction as CreateRendezVousAction;
-use toubilib\api\middlewares\AnnulerRendezVousAction as AnnulerRendezVousAction;
-use toubilib\api\middlewares\ConsulterAgendaAction as ConsulterAgendaAction;
+use toubilib\api\actions\AnnulerRendezVousAction as AnnulerRendezVousAction;
+use toubilib\api\actions\ConsulterAgendaAction as ConsulterAgendaAction;
+use toubilib\api\actions\SignInAction as SignInAction;
+use toubilib\api\actions\RefreshAction as RefreshAction;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -34,5 +37,11 @@ return [
     },
     ConsulterAgendaAction::class=> function (ContainerInterface $c) {
         return new ConsulterAgendaAction($c->get(ServiceRendezVousInterface::class));
+    },
+    SignInAction::class=> function (ContainerInterface $c) {
+        return new SignInAction($c->get(AuthnServiceInterface::class));
+    },
+    RefreshAction::class=> function (ContainerInterface $c) {
+        return new RefreshAction($c->get(AuthnServiceInterface::class));
     },
 ];

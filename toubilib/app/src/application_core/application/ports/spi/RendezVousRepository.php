@@ -29,8 +29,7 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         $rendezVous = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(function($rdv){
-            //print_r($rdv["date_heure_debut"]);
-            //print_r($rdv["date_heure_fin"]);
+            
             return new RendezVous(
                 new \DateTimeImmutable($rdv["date_heure_debut"]),
                 new \DateTimeImmutable($rdv["date_heure_fin"])

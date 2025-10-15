@@ -6,7 +6,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use toubilib\api\actions\AbstractAction as AbstractAction;
-use toubilib\core\domain\entities\praticien\ServicePraticienInterface as ServicePraticienInterface;
+use toubilib\core\application\ports\ServicePraticienInterface as ServicePraticienInterface;
 
 class ListerPraticiensAction extends AbstractAction{
 

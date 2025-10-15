@@ -7,18 +7,24 @@ use toubilib\core\application\ports\spi\repositoryInterfaces\PatientRepositoryIn
 use toubilib\core\application\ports\spi\PatientRepository as PatientRepository;
 use toubilib\core\application\ports\spi\repositoryInterfaces\RendezVousRepositoryInterface as RendezVousRepositoryInterface;
 use toubilib\core\application\ports\spi\RendezVousRepository as RendezVousRepository;
-use toubilib\core\domain\entities\ServicePraticienInterface as ServicePraticienInterface;
+use toubilib\core\application\ports\spi\repositoryInterfaces\AuthnRepositoryInterface as AuthnRepositoryInterface;
+use toubilib\core\application\ports\spi\AuthnRepository as AuthnRepository;
+use toubilib\core\application\ports\ServicePraticienInterface as ServicePraticienInterface;
 use toubilib\core\application\usecases\ServicePraticien as ServicePraticien;
-use toubilib\core\domain\entities\ServiceRendezVousInterface as ServiceRendezVousInterface;
+use toubilib\core\application\ports\ServiceRendezVousInterface as ServiceRendezVousInterface;
 use toubilib\core\application\usecases\ServiceRendezVous as ServiceRendezVous;
-use toubilib\core\domain\entities\ConsulterPraticienServiceInterface as ConsulterPraticienServiceInterface;
+use toubilib\core\application\ports\ConsulterPraticienServiceInterface as ConsulterPraticienServiceInterface;
 use toubilib\core\application\usecases\ConsulterPraticienService as ConsulterPraticienService;
-use toubilib\core\domain\entities\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
+use toubilib\core\application\ports\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
 use toubilib\core\application\usecases\ConsulterRendezVousService as ConsulterRendezVousService;
+use toubilib\core\application\ports\AuthnServiceInterface as AuthnServiceInterface;
+use toubilib\core\application\usecases\AuthnService as AuthnService;
 use toubilib\api\middlewares\CreateRdvMiddleware as CreateRdvMiddleware;
-use toubilib\api\actions\CreateRendezVousAction as CreateRendezVousAction;
-use toubilib\api\middlewares\AnnulerRendezVousAction as AnnulerRendezVousAction;
-use toubilib\api\middlewares\ConsulterAgendaAction as ConsulterAgendaAction;
+use toubilib\api\middlewares\AuthnMiddleware as AuthnMiddleware;
+use toubilib\api\middlewares\AuthzMiddleware as AuthzMiddleware;
+use toubilib\api\provider\JWTAuthnProvider as JWTAuthnProvider;
+use toubilib\core\application\ports\AuthzServiceInterface as AuthzServiceInterface;
+use toubilib\core\application\usecases\AuthzService as AuthzService;
 
 
 return [
@@ -46,6 +52,14 @@ return [
         $password = $config['password'];
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
+    \PDO::class . '.auth' => function(ContainerInterface $c){
+        $chemin = __DIR__ . '\toubiauth.db.ini';
+        $config = parse_ini_file($chemin);
+        $dsn = "{$config['driver']}:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
+        $user = $config['user'];
+        $password = $config['password'];
+        return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    },
     PraticienRepositoryInterface::class=> function (ContainerInterface $c) {
         return new PraticienRepository($c->get(\PDO::class . '.praticien'));
     },
@@ -54,6 +68,9 @@ return [
     },
     RendezVousRepositoryInterface::class=> function (ContainerInterface $c) {
         return new RendezVousRepository($c->get(\PDO::class . '.rdv'));
+    },
+    AuthnRepositoryInterface::class=> function (ContainerInterface $c) {
+        return new AuthnRepository($c->get(\PDO::class . '.auth'));
     },
     ServicePraticienInterface::class=> function (ContainerInterface $c) {
         return new Servicepraticien($c->get(PraticienRepositoryInterface::class));
@@ -71,16 +88,23 @@ return [
     ConsulterRendezVousServiceInterface::class=> function (ContainerInterface $c) {
         return new ConsulterRendezVousService($c->get(RendezVousRepositoryInterface::class));
     },
+    AuthnServiceInterface::class=> function (ContainerInterface $c) {
+        return new AuthnService($c->get(AuthnRepositoryInterface::class));
+    },
+    AuthzServiceInterface::class=> function (ContainerInterface $c) {
+        return new AuthzService();
+    },
     CreateRdvMiddleware::class => function(ContainerInterface $c){
         return new CreateRdvMiddleware();
     },
-    CreateRendezVousAction::class => function(ContainerInterface $c){
-        return new CreateRendezVousAction($c->get(ServiceRendezVousInterface::class));
+    JWTAuthnProvider::class => function(ContainerInterface $c){
+        $secret = __DIR__ . DIRECTORY_SEPARATOR . 'secret.ini';
+        return new JWTAuthnProvider($secret, $c->get(AuthnServiceInterface::class));
     },
-    AnnulerRendezVousAction::class => function(ContainerInterface $c){
-        return new AnnulerRendezVousAction($c->get(ServiceRendezVousInterface::class));
+    AuthnMiddleware::class => function(ContainerInterface $c){
+        return new AuthnMiddleware($c->get(JWTAuthnProvider::class));
     },
-    ConsulterAgendaAction::class => function(ContainerInterface $c){
-        return new ConsulterAgendaAction($c->get(ServiceRendezVousInterface::class));
-    }
+    AuthzMiddleware::class => function(ContainerInterface $c){
+        return new AuthzMiddleware($c->get(AuthzServiceInterface::class));
+    },
 ];

@@ -2,7 +2,7 @@
 
 namespace toubilib\core\application\usecases;
 
-use toubilib\core\domain\entities\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
+use toubilib\core\application\ports\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
 use toubilib\core\application\ports\api\dtos\RendezVousDTO as RendezVousDTO;
 use toubilib\core\application\ports\spi\repositoryInterfaces\RendezVousRepositoryInterface as RendezVousRepositoryInterface;
 

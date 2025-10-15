@@ -1,6 +1,6 @@
 <?php
 
-namespace toubilib\core\domain\entities;
+namespace toubilib\core\application\ports;
 
 interface ServicePraticienInterface{
     public function listerPraticiens() : array;

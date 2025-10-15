@@ -2,7 +2,7 @@
 
 namespace toubilib\core\application\usecases;
 
-use toubilib\core\domain\entities\ServiceRendezVousInterface as ServiceRendezVousInterface;
+use toubilib\core\application\ports\ServiceRendezVousInterface as ServiceRendezVousInterface;
 use toubilib\core\application\ports\api\dtos\RendezVousDTO as RendezVousDTO;
 use toubilib\core\application\ports\api\dtos\InputRendezVousDTO as InputRendezVousDTO;
 use toubilib\core\application\exceptions\ValidationException as ValidationException;

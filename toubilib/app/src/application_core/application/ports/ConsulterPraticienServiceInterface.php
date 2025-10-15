@@ -1,6 +1,6 @@
 <?php
 
-namespace toubilib\core\domain\entities;
+namespace toubilib\core\application\ports;
 
 use toubilib\core\application\ports\api\dtos\PraticienDTO as PraticienDTO;
 

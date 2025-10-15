@@ -6,7 +6,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use toubilib\api\actions\AbstractAction as AbstractAction;
-use toubilib\core\domain\entities\praticien\ServiceRendezVousInterface as ServiceRendezVousInterface;
+use toubilib\core\application\ports\ServiceRendezVousInterface as ServiceRendezVousInterface;
 use toubilib\core\application\exceptions\RendezVousInvalideException as RendezVousInvalideException;
 use toubilib\core\application\exceptions\RendezVousIntrouvableException as RendezVousIntrouvableException;
 
@@ -29,8 +29,7 @@ class AnnulerRendezVousAction extends AbstractAction{
                 'message' => 'Rendez Vous annuler', 
                 '_links' => [
                     'self' => ['href' => "/rdvs/$id"],
-                    'praticiens' => ['href' => '/praticiens'],
-                    'creer' => ['href' => "/rdvs", 'method' => 'POST']
+                    'praticiens' => ['href' => '/praticiens']
                 ]]));
             return $rs->withStatus(200)->withHeader('Content-Type', 'application/json');
         } catch(RendezVousIntrouvableException $e){

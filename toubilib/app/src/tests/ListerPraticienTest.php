@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '\..\..\vendor\autoload.php';
 use PHPUnit\Framework\TestCase;
-use toubilib\core\domain\entities\ServicePraticienInterface as ServicePraticienInterface;
+use toubilib\core\application\ports\ServicePraticienInterface as ServicePraticienInterface;
 use DI\Container;
 
 class ListerPraticienTest extends TestCase{

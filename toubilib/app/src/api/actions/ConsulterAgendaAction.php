@@ -6,7 +6,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use toubilib\api\actions\AbstractAction as AbstractAction;
-use toubilib\core\domain\entities\praticien\ServiceRendezVousInterface as ServiceRendezVousInterface;
+use toubilib\core\application\ports\ServiceRendezVousInterface as ServiceRendezVousInterface;
 use toubilib\core\application\exceptions\RendezVousInvalideException as RendezVousInvalideException;
 use toubilib\core\application\exceptions\RendezVousIntrouvableException as RendezVousIntrouvableException;
 
@@ -35,8 +35,7 @@ class ConsulterAgendaAction extends AbstractAction{
             '_links' => [
                 'self' => ['href' => "/praticiens/$praticienId/agenda"],
                 'praticien' => ['href' => "/praticiens/$praticienId"],
-                'rdvs' => ['href' => "/praticiens/$praticienId/rdvs"],
-                'creer' => ['href' => '/rdvs', 'method' => 'POST']
+                'rdvs' => ['href' => "/praticiens/$praticienId/rdvs"]
             ]
         ];
         $rs->getBody()->write(json_encode($body));
