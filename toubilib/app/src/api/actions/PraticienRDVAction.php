@@ -10,9 +10,9 @@ use toubilib\core\application\ports\ServiceRendezVousInterface as ServiceRendezV
 
 class PraticienRDVAction extends AbstractAction{
 
-    private ConsulterPraticienServiceInterface $service;
+    private ServiceRendezVousInterface $service;
 
-    public function __construct(ConsulterPraticienServiceInterface $service){
+    public function __construct(ServiceRendezVousInterface $service){
         $this->service = $service;
     }
 
@@ -20,17 +20,21 @@ class PraticienRDVAction extends AbstractAction{
         $id = $args['id'] ?? null;
         $query = $rq->getQueryParams();
         if(!$id || !isset($query['debut']) || !isset($query['fin'])){
-            return new Response(400, [], json_encode(['erreur' => 'parametre manquant']));
+            $json = json_encode(['erreur' => 'parametre manquant'], JSON_PRETTY_PRINT);
+            $rs->getBody()->write($json);
+            return $rs->withHeader('Content-type', 'application/json')->withStatus(400);
         }
         try {
             $debut = new \DateTimeImmutable($query['debut']);
             $fin = new \DateTimeImmutable($query['fin']);
         } catch(\Exception $e){
-            return new Response(400, [], json_encode(['erreur' => 'dates invalides']));
+            $json = json_encode(['erreur' => 'dates invalides'], JSON_PRETTY_PRINT);
+            $rs->getBody()->write($json);
+            return $rs->withHeader('Content-type', 'application/json')->withStatus(400);
         }
         $rdvs = $this->service->listerCrenaux($id, $debut, $fin);
         $body = [
-            'rdvs' => $rdvs->toArray(),
+            'rdvs' => $rdvs,
             '_links' => [
                 'self' => ['href' => "/praticiens/{$id}/rdvs?debut={$debut->format('Y-m-d')}&fin={$fin->format('Y-m-d')}"],
                 'agenda' => ['href' => "/praticiens/{$id}/agenda"],

@@ -14,7 +14,7 @@ class RendezVous
     private String $motifVisite;
     private \DateTimeImmutable $dateCreation;
 
-    public function __construct(\DateTimeImmutable $dateDebut, \DateTimeImmutable $dateFin, int $duree = 0, int $statut = 0, String $motifVisite = "", \DateTimeImmutable $dateCreation = null){
+    public function __construct(\DateTimeImmutable $dateDebut, \DateTimeImmutable $dateFin, int $duree = 0, int $statut = 0, String $motifVisite = "", ?\DateTimeImmutable $dateCreation = null){
         $this->dateDebut = $dateDebut;
         $this->dateFin = $dateFin;
         $this->duree = $duree;

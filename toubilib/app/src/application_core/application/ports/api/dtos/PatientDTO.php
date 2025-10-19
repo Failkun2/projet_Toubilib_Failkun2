@@ -3,8 +3,7 @@
 namespace toubilib\core\application\ports\api\dtos;
 
 
-class PatientDTO
-{
+class PatientDTO implements \JsonSerializable{
  
     private string $nom;
     private string $prenom;
@@ -20,7 +19,7 @@ class PatientDTO
         $this->telephone = $telephone;
     }
 
-    public function Serialise_JSON() : array{
+    public function jsonSerialize() : array{
         return[
             'nom' => $this->nom,
             'prenom' => $this->prenom,

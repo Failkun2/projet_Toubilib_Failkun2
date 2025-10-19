@@ -2,7 +2,7 @@
 
 namespace toubilib\core\application\ports\api\dtos;
 
-class PraticienDTO{
+class PraticienDTO implements \JsonSerializable{
     private string $nom;
     private string $prenom;
     private string $ville;
@@ -25,7 +25,7 @@ class PraticienDTO{
         $this->moyensPaiement = $moyensPaiement;
     }
 
-    public function Serialise_JSON() : array{
+    public function jsonSerialize() : array{
         return[
             'nom' => $this->nom,
             'prenom' => $this->prenom,
@@ -35,7 +35,7 @@ class PraticienDTO{
             'telephone' => $this->telephone,
             'adresse' => $this->adresse,
             'motifs' => $this->motifs,
-            'moyensPaiement' => $this->moyensPaiement,
+            'moyensPaiement' => $this->moyensPaiement
         ];
     }
 }

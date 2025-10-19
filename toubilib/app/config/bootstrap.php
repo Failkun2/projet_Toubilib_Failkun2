@@ -7,8 +7,16 @@ use toubilib\api\middlewares\Cors;
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ );
 $dotenv->load();
 
+$cBuilder = new ContainerBuilder();
 
+$cBuilder->addDefinitions([
+    'displayErrorDetails' => $_ENV['DISPLAY_ERROR_DETAILS'] ?? true,
+]);
+$cBuilder->addDefinitions(__DIR__ . '/services.php');
+$cBuilder->addDefinitions(__DIR__ . '/../src/application_core/application/ports/api/api.php');
 
+$c = $cBuilder->build();
+AppFactory::setContainer($c);
 $app = AppFactory::create();
 
 

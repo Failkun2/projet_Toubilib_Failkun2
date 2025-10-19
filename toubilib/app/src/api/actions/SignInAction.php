@@ -14,11 +14,11 @@ Class SignInAction extends AbstractAction{
     private JWTAuthnProvider $authnProvider;
 
     public function __construct(JWTAuthnProvider $authnProvider){
-        $this->authnProvider = $authnProvider
+        $this->authnProvider = $authnProvider;
     }
 
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
-        $data = $rq->getParsedBody()
+        $data = $rq->getParsedBody();
         if(empty($data['email']) || empty($data['password'])){
             return new Response(400, ['Content-type' => 'application/json'], json_encode(['erreur' => 'email ou mot de passe manquant']));
         }
@@ -33,7 +33,7 @@ Class SignInAction extends AbstractAction{
         $body = [
             'profile' => [
                 'id' => $authn->__get('profil')->__get('id'),
-                'email' => $authn->__get('profil')->__get('email')
+                'email' => $authn->__get('profil')->__get('email'),
                 'role' => $authn->__get('profil')->__get('role')
             ],
             'accessToken' => $authn->__get('accessToken'),

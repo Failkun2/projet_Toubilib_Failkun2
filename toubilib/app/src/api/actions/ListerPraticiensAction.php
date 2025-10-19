@@ -21,8 +21,8 @@ class ListerPraticiensAction extends AbstractAction{
         $body = [
             'praticiens' => $praticiens,
             '_links' => [
-                'self' => ['href' => '/praticiens'],
-                'creer' => ['href' => '/rdvs', 'method' => 'POST'] 
+                'self' => ['href' => 'praticiens'],
+                'creer' => ['href' => 'rdvs', 'method' => 'POST'] 
             ]
         ];
         $json = json_encode($body, JSON_PRETTY_PRINT);

@@ -79,6 +79,7 @@ class ServiceRendezVous implements ServiceRendezVousInterface
             $errors['Disponibilite'] = 'Praticien indisponible';
         }
 
+        var_dump($errors);
         if(!empty($errors)){
             throw new ValidationException($errors);
         }
@@ -112,7 +113,7 @@ class ServiceRendezVous implements ServiceRendezVousInterface
         $this->rdvRepository->updateStatut($idRdv, $rdv);
     }
 
-    public function consulterAgenda(String $praticienId, \DateTimeImmutable $debut = null, \DateTimeImmutable $fin = null) : array{
+    public function consulterAgenda(String $praticienId, ?\DateTimeImmutable $debut = null, ?\DateTimeImmutable $fin = null) : array{
         if(!$debut){
             $debut = new \DateTimeImmutable('today 08:00:00');
         }

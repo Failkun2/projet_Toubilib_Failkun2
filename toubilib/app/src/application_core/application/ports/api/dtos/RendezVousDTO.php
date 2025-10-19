@@ -2,7 +2,7 @@
 
 namespace toubilib\core\application\ports\api\dtos;
 
-class RendezVousDTO{
+class RendezVousDTO implements \JsonSerializable{
     private \DateTimeImmutable $dateDebut;
     private \DateTimeImmutable $dateFin;
     private int $duree;
@@ -10,7 +10,7 @@ class RendezVousDTO{
     private String $motifVisite;
     private \DateTimeImmutable $dateCreation;
 
-    public function __construct(\DateTimeImmutable $dateDebut, \DateTimeImmutable $dateFin, int $duree = 0, int $statut = 0, String $motifVisite = "", \DateTimeImmutable $dateCreation = null){
+    public function __construct(\DateTimeImmutable $dateDebut, \DateTimeImmutable $dateFin, int $duree = 0, int $statut = 0, String $motifVisite = "", ?\DateTimeImmutable $dateCreation = null){
         $this->dateDebut = $dateDebut;
         $this->dateFin = $dateFin;
         $this->duree = $duree;
@@ -19,7 +19,7 @@ class RendezVousDTO{
         $this->dateCreation = $dateCreation ?? new \DateTimeImmutable();
     }
 
-    public function serialise_JSON() : array{
+    public function jsonSerialize() : array{
         return[
             'dateDebut' => $this->dateDebut,
             'dateFin' => $this->dateFin,

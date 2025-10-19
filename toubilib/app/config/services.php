@@ -37,7 +37,7 @@ return [
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
     \PDO::class . '.patient' => function(ContainerInterface $c){
-        $chemin = __DIR__ . '\toubipat.db.ini';
+        $chemin = __DIR__ . DIRECTORY_SEPARATOR . 'toubipat.db.ini';
         $config = parse_ini_file($chemin);
         $dsn = "{$config['driver']}:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
         $user = $config['user'];
@@ -45,7 +45,7 @@ return [
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
     \PDO::class . '.rdv' => function(ContainerInterface $c){
-        $chemin = __DIR__ . '\toubirdv.db.ini';
+        $chemin = __DIR__ . DIRECTORY_SEPARATOR . 'toubirdv.db.ini';
         $config = parse_ini_file($chemin);
         $dsn = "{$config['driver']}:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
         $user = $config['user'];
@@ -53,7 +53,7 @@ return [
         return new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     },
     \PDO::class . '.auth' => function(ContainerInterface $c){
-        $chemin = __DIR__ . '\toubiauth.db.ini';
+        $chemin = __DIR__ . DIRECTORY_SEPARATOR . 'toubiauth.db.ini';
         $config = parse_ini_file($chemin);
         $dsn = "{$config['driver']}:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
         $user = $config['user'];

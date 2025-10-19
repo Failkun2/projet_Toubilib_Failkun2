@@ -2,7 +2,7 @@
 
 namespace toubilib\core\application\ports\api\dtos;
 
-class InputRendezVousDTO{
+class InputRendezVousDTO implements \JsonSerializable{
     private String $praticienId;
     private String $patientId;
     private \DateTimeImmutable $dateDebut;
@@ -39,5 +39,15 @@ class InputRendezVousDTO{
                 break;
         }
         return $res;
+    }
+
+    public function jsonSerialize() : array{
+        return[
+            'dateDebut' => $this->dateDebut,
+            'praticienId' => $this->praticienId,
+            'duree' => $this->duree,
+            'patientId' => $this->patientId,
+            'motifVisite' => $this->motifVisite,
+        ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace toubilib\core\application\ports\api\dtos;
 
-class ProfileDTO{
+class ProfileDTO implements \JsonSerializable{
     private String $id;
     private String $email;
     private int $role;
@@ -29,5 +29,13 @@ class ProfileDTO{
                 break;
         }
         return $res;
+    }
+
+    public function jsonSerialize() : array{
+        return[
+            'id' => $this->id,
+            'email' => $this->email,
+            'role' => $this->role,
+        ];
     }
 }

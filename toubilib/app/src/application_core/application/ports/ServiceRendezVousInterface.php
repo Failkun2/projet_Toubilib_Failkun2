@@ -11,5 +11,5 @@ interface ServiceRendezVousInterface{
 
     public function annulerRendezVous(String $idRdv) : void;
 
-    public function consulterAgenda(String $praticienId, \DateTimeImmutable $debut = null, \DateTimeImmutable $fin = null) : array;
+    public function consulterAgenda(String $praticienId, ?\DateTimeImmutable $debut = null, ?\DateTimeImmutable $fin = null) : array;
 }

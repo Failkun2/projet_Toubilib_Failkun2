@@ -2,7 +2,7 @@
 
 namespace toubilib\core\application\ports\api\dtos;
 
-class CredentialsDTO{
+class CredentialsDTO implements \JsonSerializable{
     private String $email;
     private String $password;
     
@@ -24,5 +24,12 @@ class CredentialsDTO{
                 break;
         }
         return $res;
+    }
+
+    public function jsonSerialize() : array{
+        return[
+            'email' => $this->email,
+            'password' => $this->password,
+        ];
     }
 }

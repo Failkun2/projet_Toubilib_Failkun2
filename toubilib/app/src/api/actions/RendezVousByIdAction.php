@@ -3,7 +3,7 @@
 namespace toubilib\api\actions;
 
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface;
 use toubilib\api\actions\AbstractAction as AbstractAction;
 use toubilib\core\application\ports\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
@@ -16,15 +16,17 @@ class RendezVousByIdAction extends AbstractAction{
         $this->service = $service;
     }
 
-    public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
+    public function __invoke(ServerRequestInterface $rq, Response $rs, array $args) : Response{
         $id = $args['id'] ?? null;
         if(!$id){
-            return new Response(400, [], json_encode(['erreur' => 'id de rdv manquant']));
+            $json = json_encode(['erreur' => 'id de rdv manquant'], JSON_PRETTY_PRINT);
+            $rs->getBody()->write($json);
+            return $rs->withHeader('Content-type', 'application/json')->withStatus(400);
         }
         try{
             $rdv = $this->service->afficherRendezVous($id);
             $body = [
-                'rdv' => $rdv->toArray(),
+                'rdv' => $rdv,
                 '_links' => [
                     'self' => ['href' => "/rdvs/{$id}"],
                     'annuler' => ['href' => "/rdvs/{$id}/annuler", 'method' => 'PATCH'],
@@ -35,7 +37,9 @@ class RendezVousByIdAction extends AbstractAction{
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
         } catch(\Throwable $e){
-            return new Response(404, [], json_encode(['erreur' => 'rdv introuvable']));
+            $json = json_encode(['erreur' => "rdv introuvable : $id"], JSON_PRETTY_PRINT);
+            $rs->getBody()->write($json);
+            return $rs->withHeader('Content-type', 'application/json')->withStatus(404);
         }
     }
 }

@@ -44,9 +44,19 @@ services:
 
   toubipati.db:
     image: 'postgres:latest'
-    env_file: ./toubirdvdb.env
+    env_file: ./toubipatientdb.env
     ports:
       - '5433:5432'
+    networks:
+      - toubilib.net
+    volumes:
+      - ./sql:/var/sql
+
+  toubiauth.db:
+    image: 'postgres:latest'
+    env_file: ./toubiauthdb.env
+    ports:
+      - '5435:5432'
     networks:
       - toubilib.net
     volumes:

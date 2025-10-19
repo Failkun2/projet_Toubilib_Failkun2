@@ -43,6 +43,9 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         WHERE id = :id");
         $stmt->execute(['id' => $id,]);
         $rendezVous = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($rendezVous === false) {
+            throw new \RuntimeException("Aucun rdv trouvé avec l'id : $id");
+        }
         return new RendezVous(
             new \DateTimeImmutable($rendezVous["date_heure_debut"]),
             new \DateTimeImmutable($rendezVous["date_heure_fin"]),

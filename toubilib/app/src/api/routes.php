@@ -28,13 +28,14 @@ return function( \Slim\App $app):\Slim\App {
     $app->post('/auth/refresh', RefreshAction::class);
 
     $app->group('', function(\Slim\Routing\RouteCollectorProxy $group){
-        $app->get('/praticiens/{id}/agenda', ConsulterAgendaAction::class);
-        $app->post('/praticiens/{id}/rdvs', CreateRendezVousAction::class)
+        $group->get('/praticiens/{id}/agenda', ConsulterAgendaAction::class);
+        $group->post('/praticiens/{id}/rdvs', CreateRendezVousAction::class)
         ->add(CreateRdvMiddleware::class);
-        $app->get('/praticiens/{id}', PraticienByIdAction::class);
-        $app->patch('/rdvs/{id}/annuler', AnnulerRendezVousAction::class);
+        $group->get('/praticiens/{id}', PraticienByIdAction::class);
+        $group->patch('/rdvs/{id}/annuler', AnnulerRendezVousAction::class);
     })
     ->add(AuthnMiddleware::class)
     ->add(AuthzMiddleware::class);
+    
     return $app;
 };

@@ -25,7 +25,11 @@ class ServicePraticien implements ServicePraticienInterface
                 $praticien->__get("prenom"),
                 $praticien->__get("ville"),
                 $praticien->__get("email"),
-                $praticien->__get("specialite")
+                $praticien->__get("specialite"),
+                $praticien->__get("telephone"),
+                $praticien->__get("adresse"),
+                $praticien->__get("motifs"),
+                $praticien->__get("moyensPaiement")
             );
         }, $praticiens);
     }
