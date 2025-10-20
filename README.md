@@ -3,4 +3,4 @@
 Projet Toubilib de Félicien Kinnig
 Plus d'informations à venir
 
-Tests impossible pour le moment car problèmes avec le dockerfile sur mon ordinateur windows
+Tests sont fait pour tous les fonctionnalités, seulement quelques uns à faire dans un navigateur avec l'api
