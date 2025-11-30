@@ -23,7 +23,7 @@ class PraticienByIdAction extends AbstractAction{
         }
         $pratitien = $this->service->afficherPraticien($id);
         $body = [
-            'praticien' => $pratitien->toArray(),
+            'praticien' => $pratitien,
             '_links' => [
                 'self' => ['href' => "/praticiens/{$id}"],
                 'rdvs' => ['href' => "/praticiens/{$id}/rdvs"],
