@@ -30,14 +30,14 @@ class RendezVousByIdAction extends AbstractAction{
                 '_links' => [
                     'self' => ['href' => "/rdvs/{$id}"],
                     'annuler' => ['href' => "/rdvs/{$id}/annuler", 'method' => 'PATCH'],
-                    'praticien' => ['href' => "/praticiens/{$rdv->__get('praticienId')}"]
+                    'praticien' => ['href' => "/praticiens/{$rdv['idPraticien']}"]
                 ]
             ];
             $json = json_encode($body, JSON_PRETTY_PRINT);
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
         } catch(\Throwable $e){
-            $json = json_encode(['erreur' => "rdv introuvable : $id"], JSON_PRETTY_PRINT);
+            $json = json_encode(['erreur' => $e->getMessage()], JSON_PRETTY_PRINT);
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(404);
         }
