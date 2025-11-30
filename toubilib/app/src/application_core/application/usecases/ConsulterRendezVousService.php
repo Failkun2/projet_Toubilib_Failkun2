@@ -16,16 +16,22 @@ class ConsulterRendezVousService implements ConsulterRendezVousServiceInterface
         $this->rdvRepository = $rdvRepository;
     }
 
-    public function afficherRendezVous(String $id) : RendezVousDTO {
-    	$rdv = $this->rdvRepository->findById($id);
+    public function afficherRendezVous(String $id) : array {
+        try{
+    	    $rdv = $this->rdvRepository->findById($id);
 
-        return new RendezVousDTO(
-            $rdv->__get("dateDebut"),
-            $rdv->__get("dateFin"),
-            $rdv->__get("duree"),
-            $rdv->__get("statut"),
-            $rdv->__get("motifVisite"),
-            $rdv->__get("dateCreation")
-        );
+            $dto =  new RendezVousDTO(
+                $rdv->__get("dateDebut"),
+                $rdv->__get("dateFin"),
+                $rdv->__get("duree"),
+                $rdv->__get("statut"),
+                $rdv->__get("motifVisite"),
+                $rdv->__get("dateCreation"),
+                $rdv->__get("idPraticien")
+            );
+            return $dto->jsonSerialize();
+        } catch(\Exception $e){
+            $e->getMessage();
+        }
     }
 }
