@@ -5,6 +5,8 @@ namespace toubilib\core\application\usecases;
 use toubilib\core\application\ports\ServiceRendezVousInterface as ServiceRendezVousInterface;
 use toubilib\core\application\ports\api\dtos\RendezVousDTO as RendezVousDTO;
 use toubilib\core\application\ports\api\dtos\InputRendezVousDTO as InputRendezVousDTO;
+use toubilib\core\application\ports\api\dtos\PatientDTO as PatientDTO;
+use toubilib\core\application\ports\api\dtos\PraticienDTO as PraticienDTO;
 use toubilib\core\application\exceptions\ValidationException as ValidationException;
 use Ramsey\Uuid\Uuid;
 use toubilib\core\application\ports\spi\repositoryInterfaces\RendezVousRepositoryInterface as RendezVousRepositoryInterface;
@@ -33,7 +35,11 @@ class ServiceRendezVous implements ServiceRendezVousInterface
         return array_map(function($rdv){
             return new RendezVousDTO(
                 $rdv->__get("dateDebut"),
-                $rdv->__get("dateFin")
+                $rdv->__get("dateFin"),
+                $rdv->__get("duree"),
+                $rdv->__get("statut"),
+                $rdv->__get("motifVisite"),
+                $rdv->__get("dateCreation")
             );
         }, $rendezVous);
     }
@@ -125,6 +131,24 @@ class ServiceRendezVous implements ServiceRendezVousInterface
         foreach($rdvs as $rdv){
             $patient = $this->patientRepository->findById($rdv['patient_id']);
             $praticien = $this->praticienRepository->findById($rdv['praticien_id']);
+            $patientDto = new PatientDTO(
+                $patient->__get('nom'),
+                $patient->__get('prenom'),
+                $patient->__get('dateNaissance'),
+                $patient->__get('email'),
+                $patient->__get('telephone')
+            );
+            $praticienDto = new PraticienDTO(
+                $praticien->__get('nom'),
+                $praticien->__get('prenom'),
+                $praticien->__get('ville'),
+                $praticien->__get('email'),
+                $praticien->__get('specialite'),
+                $praticien->__get('telephone'),
+                $praticien->__get('adresse'),
+                $praticien->__get('motifs'),
+                $praticien->__get('moyensPaiement')
+            );
             $result[] = [
                 'id' => $rdv['id'],
                 'dateDebut' => $rdv['date_heure_debut'],
@@ -132,8 +156,8 @@ class ServiceRendezVous implements ServiceRendezVousInterface
                 'duree' => $rdv['duree'],
                 'statut' => $rdv['status'],
                 'motif_visite' => $rdv['motif_visite'],
-                'patient' => $patient,
-                'praticien' => $praticien
+                'patient' => $patientDto,
+                'praticien' => $praticienDto
             ];
         }
         return $result;
