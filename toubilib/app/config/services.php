@@ -107,4 +107,7 @@ return [
     AuthzMiddleware::class => function(ContainerInterface $c){
         return new AuthzMiddleware($c->get(AuthzServiceInterface::class));
     },
+    Cors::class => function() {
+        return new \toubilib\api\middlewares\Cors();
+    },
 ];
