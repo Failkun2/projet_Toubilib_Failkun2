@@ -20,14 +20,17 @@ class CreateRendezVousAction extends AbstractAction{
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
         $dto = $rq->getAttribute('inputRdv');
         if(!$dto){
-            return new Response(400, [], json_encode(['erreur' => 'données manquantes']));
+            $rs->getBody()->write(json_encode(['erreur' => 'données manquantes']));
+            return $rs->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
         try{
             $newId = $this->service->creerRendezVous($dto);
         }catch(ValidationException $ve){
-            return new Response(422, ['Content-Type' => 'application/json'], json_encode(['erreur' => $ve->getErrors()]));
+            $rs->getBody()->write(json_encode(['erreur' => $ve->getErrors()]));
+            return $rs->withStatus(422)->withHeader('Content-Type', 'application/json');
         }catch(\Throwable $t){
-            return new Response(500, ['Content-Type' => 'application/json'], json_encode(['erreur' => 'erreur serveur']));
+            $rs->getBody()->write(json_encode(['erreur' => $t->getMessage()]));
+            return $rs->withStatus(500)->withHeader('Content-Type', 'application/json');
         }
         
         $payload = [
@@ -40,7 +43,7 @@ class CreateRendezVousAction extends AbstractAction{
             ]
         ];
         $location = '/rdvs/' . $newId;
-
-        return new Response(201, ['Content-Type' => 'application/json', 'Location' => $location], json_encode($payload));
+        $rs->getBody()->write(json_encode($payload));
+        return $rs->withStatus(201)->withHeader('Content-Type', 'application/json')->withHeader('Location', $location);
     }
 }
