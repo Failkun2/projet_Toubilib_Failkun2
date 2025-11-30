@@ -6,7 +6,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use toubilib\api\actions\AbstractAction as AbstractAction;
-use toubilib\api\providers\JWTAuthnProvider as JWTAuthnProvider;
+use toubilib\api\provider\JWTAuthnProvider as JWTAuthnProvider;
 use toubilib\core\application\ports\api\dtos\CredentialsDTO as CredentialsDTO;
 
 Class SignInAction extends AbstractAction{
@@ -20,14 +20,16 @@ Class SignInAction extends AbstractAction{
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
         $data = $rq->getParsedBody();
         if(empty($data['email']) || empty($data['password'])){
-            return new Response(400, ['Content-type' => 'application/json'], json_encode(['erreur' => 'email ou mot de passe manquant']));
+            $rs->getBody()->write(json_encode(['erreur' => 'email ou mot de passe manquant']));
+            return $rs->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 
         $dto = new CredentialsDTO($data['email'], $data['password']);
         $authn = $this->authnProvider->signIn($dto);
 
         if(!$authn){
-            return new Response(401, ['Content-type' => 'application/json'], json_encode(['erreur' => 'identifiants invalides']));            
+            $rs->getBody()->write(json_encode(['erreur' => 'identifiants invalides']));
+            return $rs->withHeader('Content-Type', 'application/json')->withStatus(401);
         }
 
         $body = [
@@ -41,8 +43,6 @@ Class SignInAction extends AbstractAction{
             '_links' => [
                 'self' => ['href' => "/auth/signin", 'method' => 'POST'],
                 'refresh' => ['href' => "/auth/refresh", 'method' => 'POST'],
-                'profile' => ['href' => "/users/{$authn->__get('profil')->__get('id')}", 'method' => 'GET'],
-                'rdv' => ['href' => "/patients/{$authn->__get('profil')->__get('id')}/rdvs", 'method' => 'GET']
             ]
         ];
         $json = json_encode($body, JSON_PRETTY_PRINT);
