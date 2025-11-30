@@ -18,6 +18,9 @@ services:
       - toubilib.net
     depends_on:
       - toubiprati.db
+      - toubirdv.db
+      - toubipati.db
+      - toubiauth.db
     command: sh -c "composer install && php -S 0.0.0.0:80 -t /var/php/public"
 
     # service toubiprat.db : base de données postgresql pour les praticiens
@@ -31,6 +34,8 @@ services:
       - toubilib.net
     volumes:
       - ./sql:/var/sql
+      - ./sql/praticien:/docker-entrypoint-initdb.d
+
 
   toubirdv.db:
     image: 'postgres:latest'
@@ -41,6 +46,7 @@ services:
       - toubilib.net
     volumes:
       - ./sql:/var/sql
+      - ./sql/rdv:/docker-entrypoint-initdb.d
 
   toubipati.db:
     image: 'postgres:latest'
@@ -51,6 +57,7 @@ services:
       - toubilib.net
     volumes:
       - ./sql:/var/sql
+      - ./sql/patient:/docker-entrypoint-initdb.d
 
   toubiauth.db:
     image: 'postgres:latest'
@@ -61,6 +68,7 @@ services:
       - toubilib.net
     volumes:
       - ./sql:/var/sql
+      - ./sql/auth:/docker-entrypoint-initdb.d
 
   #
   # service administration des bases sql
