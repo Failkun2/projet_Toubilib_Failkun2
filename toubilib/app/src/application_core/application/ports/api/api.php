@@ -15,6 +15,7 @@ use toubilib\api\actions\ConsulterAgendaAction as ConsulterAgendaAction;
 use toubilib\api\actions\SignInAction as SignInAction;
 use toubilib\api\actions\RefreshAction as RefreshAction;
 use Psr\Container\ContainerInterface;
+use toubilib\api\provider\JWTAuthnProvider as JWTAuthnProvider;
 
 return [
     ListerPraticiensAction::class=> function (ContainerInterface $c) {
@@ -39,9 +40,9 @@ return [
         return new ConsulterAgendaAction($c->get(ServiceRendezVousInterface::class));
     },
     SignInAction::class=> function (ContainerInterface $c) {
-        return new SignInAction($c->get(AuthnServiceInterface::class));
+        return new SignInAction($c->get(JWTAuthnProvider::class));
     },
     RefreshAction::class=> function (ContainerInterface $c) {
-        return new RefreshAction($c->get(AuthnServiceInterface::class));
+        return new RefreshAction($c->get(JWTAuthnProvider::class));
     },
 ];
