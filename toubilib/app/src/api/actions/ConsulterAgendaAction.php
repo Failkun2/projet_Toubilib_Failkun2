@@ -25,8 +25,12 @@ class ConsulterAgendaAction extends AbstractAction{
             return $this->jsonResponse($rs, ['erreur' => 'ID praticien manquant'], 400);
         }
         try{
-            $debut = isset($query['debut']) ? new \DateTimeImmutable($query['debut']) : null;
-            $fin = isset($query['fin']) ? new \DateTimeImmutable($query['fin']) : null;
+            $debut = new \DateTimeImmutable($query['debut']);
+            $fin = new \DateTimeImmutable($query['fin']);
+        } catch(\Exception $e){
+            $json = json_encode(['erreur' => 'dates invalides'], JSON_PRETTY_PRINT);
+            $rs->getBody()->write($json);
+            return $rs->withHeader('Content-type', 'application/json')->withStatus(400);
         }
         $agenda = $this->service->consulterAgenda($praticienId, $debut, $fin);
         $body = [
