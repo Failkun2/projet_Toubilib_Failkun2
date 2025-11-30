@@ -9,14 +9,16 @@ class RendezVousDTO implements \JsonSerializable{
     private int $statut;
     private String $motifVisite;
     private \DateTimeImmutable $dateCreation;
+    private String $idPraticien;
 
-    public function __construct(\DateTimeImmutable $dateDebut, \DateTimeImmutable $dateFin, int $duree = 0, int $statut = 0, String $motifVisite = "", ?\DateTimeImmutable $dateCreation = null){
+    public function __construct(\DateTimeImmutable $dateDebut, \DateTimeImmutable $dateFin, int $duree = 0, int $statut = 0, String $motifVisite = "", ?\DateTimeImmutable $dateCreation = null, String $idPraticien = ""){
         $this->dateDebut = $dateDebut;
         $this->dateFin = $dateFin;
         $this->duree = $duree;
         $this->statut = $statut;
         $this->motifVisite = $motifVisite;
         $this->dateCreation = $dateCreation ?? new \DateTimeImmutable();
+        $this->idPraticien = $idPraticien;
     }
 
     public function jsonSerialize() : array{
@@ -27,6 +29,7 @@ class RendezVousDTO implements \JsonSerializable{
             'statut' => $this->statut,
             'motifVisite' => $this->motifVisite,
             'dateCreation' => $this->dateCreation,
+            'idPraticien' => $this->idPraticien,
         ];
     }
 }
