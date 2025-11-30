@@ -2,10 +2,11 @@
 
 namespace toubilib\api\middlewares;
 
-use Psr\Server\MiddlewareInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Slim\Psr7\Response;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Server\RequestHanderInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use toubilib\core\application\ports\api\dtos\ProfileDTO as ProfileDTO;
 use toubilib\core\application\ports\AuthzServiceInterface as AuthzServiceInterface;
@@ -17,7 +18,7 @@ class AuthzMiddleware implements MiddlewareInterface{
         $this->authz = $authz;
     }
 
-    public function process(ServerRequestInterface $rq, RequestHanderInterface $rh) : Response{
+    public function process(ServerRequestInterface $rq, RequestHandlerInterface $rh) : Response{
         $route = $rq->getAttribute('route');
         $profil = $rq->getAttribute('profil');
 
@@ -28,23 +29,23 @@ class AuthzMiddleware implements MiddlewareInterface{
         $routeName = $route ? $route->getPattern() : "";
 
         switch(true){
-            case str_starts_with(routeN$ame, '/praticiens') && str_contains(routeN$ame, '/agenda'):
+            case str_starts_with($routeName, '/praticiens') && str_contains($routeName, '/agenda'):
                 $id = $route->getArgument('id');
                 if(!$this->authz->authzConsulterAgenda($profil, $id)){
                     return $this->forbidden('Que le praticien peut consulté son agenda');
                 }
                 break;
-            case str_starts_with(routeN$ame, '/praticiens') && str_contains(routeN$ame, '/rdvs'):
+            case str_starts_with($routeName, '/praticiens') && str_contains($routeName, '/rdvs'):
                 if(!$this->authz->authzCreerRendezVous($profil)){
                     return $this->forbidden('Que un patient peut creer un rendez vous');
                 }
                 break;
-            case str_starts_with(routeN$ame, '/rdvs') && str_contains(routeN$ame, '/annuler'):
+            case str_starts_with($routeName, '/rdvs') && str_contains($routeName, '/annuler'):
                 if(!$this->authz->authzCreerRendezVous($profil)){
                     return $this->forbidden('Que un patient ou un patient peuvent annuler un rendez vous');
                 }
                 break;
-            case str_starts_with(routeN$ame, '/rdvs/'):
+            case str_starts_with($routeName, '/rdvs/'):
                 if(!$this->authz->authzConsulterRendezVous($profil)){
                     return $this->forbidden('Que un patient ou un patient peuvent consulter un rendez vous');
                 }
@@ -58,9 +59,9 @@ class AuthzMiddleware implements MiddlewareInterface{
         return $rh->handle($rq);
     }
 
-    private function forbidden(string $message) : Response{
+    private function forbidden(string $message) : ResponseInterface{
         $rs = new Response();
-        $rs->getBody()->write(['erreur' => $message]);
-        return $rs->withStatus(403)->withHeader(['Content-type' => 'application/json']);
+        $rs->getBody()->write(json_encode(['erreur' => $message]));
+        return $rs->withStatus(403)->withHeader('Content-type', 'application/json');
     }
 }
