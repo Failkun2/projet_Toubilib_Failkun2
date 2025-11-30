@@ -2,16 +2,16 @@
 
 namespace toubilib\api\middlewares;
 
-use Psr\Server\MiddlewareInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Server\RequestHanderInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use toubilib\core\application\ports\api\dtos\InputRendezVousDTO as InputRendezVousDTO;
 
 
-class CreateRdvMiddleware extends MiddlewareInterface{
-    public function process(ServerRequestInterface $rq, RequestHanderInterface $rh) : Response{
+class CreateRdvMiddleware implements MiddlewareInterface{
+    public function process(ServerRequestInterface $rq, RequestHandlerInterface $rh) : Response{
         $contentType = $rq->getHeaderLine('Content-Type');
         $body = (String)$rq->getBody();
 
@@ -60,7 +60,7 @@ class CreateRdvMiddleware extends MiddlewareInterface{
         }
         
         if(!empty($erreurs)){
-            return new Response(422, ['Content-Type' => 'application/json'], json_encode(['erreurs' => $erreurs]));
+            throw new Error($erreurs);
         }
 
         $dto = new InputRendezVousDTO(
@@ -70,7 +70,7 @@ class CreateRdvMiddleware extends MiddlewareInterface{
             (int)$data['duree'],
             (String)$data['motifVisite']
         );
-        $rq = $rq->withAttribut('inputRdv', $dto);
+        $rq = $rq->withAttribute('inputRdv', $dto);
         return $rh->handle($rq);
     }
 }
