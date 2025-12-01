@@ -33,4 +33,58 @@ class ServicePraticien implements ServicePraticienInterface
             );
         }, $praticiens);
     }
+
+    public function filtrerParSpecialite(String $specialite) : array{
+        $praticiens = $this->praticienRepository->findBySpecialite($specialite);
+
+        return array_map(function($praticien){
+            return new PraticienDTO(
+                $praticien->__get("nom"),
+                $praticien->__get("prenom"),
+                $praticien->__get("ville"),
+                $praticien->__get("email"),
+                $praticien->__get("specialite"),
+                $praticien->__get("telephone"),
+                $praticien->__get("adresse"),
+                $praticien->__get("motifs"),
+                $praticien->__get("moyensPaiement")
+            );
+        }, $praticiens);
+    }
+
+    public function filtrerParVille(String $ville) : array{
+        $praticiens = $this->praticienRepository->findByVille($ville);
+
+        return array_map(function($praticien){
+            return new PraticienDTO(
+                $praticien->__get("nom"),
+                $praticien->__get("prenom"),
+                $praticien->__get("ville"),
+                $praticien->__get("email"),
+                $praticien->__get("specialite"),
+                $praticien->__get("telephone"),
+                $praticien->__get("adresse"),
+                $praticien->__get("motifs"),
+                $praticien->__get("moyensPaiement")
+            );
+        }, $praticiens);
+    }
+
+    public function filtrerParSpecialiteVille(String $specialite, String $ville) : array{
+        $praticiens = $this->praticienRepository->findBySpecialiteVille($specialite, $ville);
+
+        return array_map(function($praticien){
+            return new PraticienDTO(
+                $praticien->__get("nom"),
+                $praticien->__get("prenom"),
+                $praticien->__get("ville"),
+                $praticien->__get("email"),
+                $praticien->__get("specialite"),
+                $praticien->__get("telephone"),
+                $praticien->__get("adresse"),
+                $praticien->__get("motifs"),
+                $praticien->__get("moyensPaiement")
+            );
+        }, $praticiens);
+    }
 }
