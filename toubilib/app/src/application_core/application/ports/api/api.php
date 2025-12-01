@@ -14,6 +14,7 @@ use toubilib\api\actions\AnnulerRendezVousAction as AnnulerRendezVousAction;
 use toubilib\api\actions\ConsulterAgendaAction as ConsulterAgendaAction;
 use toubilib\api\actions\SignInAction as SignInAction;
 use toubilib\api\actions\RefreshAction as RefreshAction;
+use toubilib\api\actions\FiltrerPraticiensAction as FiltrerPraticiensAction;
 use Psr\Container\ContainerInterface;
 use toubilib\api\provider\JWTAuthnProvider as JWTAuthnProvider;
 
@@ -44,5 +45,8 @@ return [
     },
     RefreshAction::class=> function (ContainerInterface $c) {
         return new RefreshAction($c->get(JWTAuthnProvider::class));
+    },
+    FiltrerPraticiensAction::class=> function (ContainerInterface $c) {
+        return new FiltrerPraticiensAction($c->get(ServicePraticienInterface::class));
     },
 ];
