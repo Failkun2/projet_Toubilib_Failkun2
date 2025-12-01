@@ -14,6 +14,7 @@ use toubilib\api\actions\AnnulerRendezVousAction as AnnulerRendezVousAction;
 use toubilib\api\actions\ConsulterAgendaAction as ConsulterAgendaAction;
 use toubilib\api\actions\SignInAction as SignInAction;
 use toubilib\api\actions\RefreshAction as RefreshAction;
+use toubilib\api\actions\FiltrerPraticiensAction as FiltrerPraticiensAction;
 use toubilib\api\middlewares\AuthnMiddleware as AuthnMiddleware;
 use toubilib\api\middlewares\AuthzMiddleware as AuthzMiddleware;
 
@@ -29,6 +30,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/rdvs/{id}', RendezVousByIdAction::class); //tester
     $app->post('/auth/signin', SignInAction::class); //tester
     $app->post('/auth/refresh', RefreshAction::class); //tester
+    $app->get('/praticiens/filtrer', FiltrerPraticiensAction::class); //tester
 
     $app->group('', function(\Slim\Routing\RouteCollectorProxy $group){
       //http://localhost:6080/praticiens/4305f5e9-be5a-4ccf-8792-7e07d7017363/agenda?debut=2025-12-01&fin=2025-12-10
