@@ -15,6 +15,8 @@ use toubilib\api\actions\ConsulterAgendaAction as ConsulterAgendaAction;
 use toubilib\api\actions\SignInAction as SignInAction;
 use toubilib\api\actions\RefreshAction as RefreshAction;
 use toubilib\api\actions\FiltrerPraticiensAction as FiltrerPraticiensAction;
+use toubilib\api\actions\HonorerRendezVousAction as HonorerRendezVousAction;
+use toubilib\api\actions\NonHonorerRendezVousAction as NonHonorerRendezVousAction;
 use toubilib\api\middlewares\AuthnMiddleware as AuthnMiddleware;
 use toubilib\api\middlewares\AuthzMiddleware as AuthzMiddleware;
 
@@ -39,6 +41,8 @@ return function( \Slim\App $app):\Slim\App {
         ->add(CreateRdvMiddleware::class); //tester
         $group->get('/praticiens/{id}', PraticienByIdAction::class); //tester
         $group->patch('/rdvs/{id}/annuler', AnnulerRendezVousAction::class); //tester
+        $group->patch('/rdvs/{id}/honorer', HonorerRendezVousAction::class); //tester
+        $group->patch('/rdvs/{id}/nonHonorer', NonHonorerRendezVousAction::class); //tester
     })
     ->add(AuthnMiddleware::class)
     ->add(AuthzMiddleware::class);
