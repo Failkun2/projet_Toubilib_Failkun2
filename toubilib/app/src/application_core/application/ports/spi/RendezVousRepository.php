@@ -123,4 +123,15 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function findHistoriqueByPatient(String $patientId): array{
+        $stmt = $this->pdo->prepare("SELECT id, praticien_id, patient_id, date_heure_debut, date_heure_fin, duree, status, motif_visite
+        FROM rdv
+        WHERE patient_id = :patientId
+        ORDER BY date_heure_debut ASC");
+        $stmt->execute([
+            'patientId' => $patientId,
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
