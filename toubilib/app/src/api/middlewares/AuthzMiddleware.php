@@ -62,6 +62,12 @@ class AuthzMiddleware implements MiddlewareInterface{
                     return $this->forbidden('Que un patient ou un praticien peuvent consulter un rendez vous');
                 }
                 break;
+            case str_starts_with($routeName, '/patients') && str_contains($routeName, '/historique'):
+                $id = $route->getArgument('id');
+                if(!$this->authz->authzConsulterHistorique($profil, $id)){
+                    return $this->forbidden('Que le patient peut consulté son historique');
+                }
+                break;
             default:
                 return $this->forbidden('Aucune ou mauvaise route sélectionner');
                 break; 
