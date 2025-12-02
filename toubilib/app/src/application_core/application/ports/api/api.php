@@ -17,6 +17,7 @@ use toubilib\api\actions\RefreshAction as RefreshAction;
 use toubilib\api\actions\FiltrerPraticiensAction as FiltrerPraticiensAction;
 use toubilib\api\actions\HonorerRendezVousAction as HonorerRendezVousAction;
 use toubilib\api\actions\NonHonorerRendezVousAction as NonHonorerRendezVousAction;
+use toubilib\api\actions\ConsulterHistoriqueAction as ConsulterHistoriqueAction;
 use Psr\Container\ContainerInterface;
 use toubilib\api\provider\JWTAuthnProvider as JWTAuthnProvider;
 
@@ -56,5 +57,8 @@ return [
     },
     NonHonorerRendezVousAction::class=> function (ContainerInterface $c) {
         return new NonHonorerRendezVousAction($c->get(ServiceRendezVousInterface::class));
+    },
+    ConsulterHistoriqueAction::class=> function (ContainerInterface $c) {
+        return new ConsulterHistoriqueAction($c->get(ServiceRendezVousInterface::class));
     },
 ];
