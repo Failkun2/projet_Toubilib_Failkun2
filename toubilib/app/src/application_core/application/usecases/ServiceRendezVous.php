@@ -162,4 +162,22 @@ class ServiceRendezVous implements ServiceRendezVousInterface
         }
         return $result;
     }
+
+    public function honorerRendezVous(String $idRdv) : void{
+        $rdv = $this->rdvRepository->findById($idRdv);
+        if(!$rdv){
+            throw new RendezVousInvalideException("Rendez Vous innexistant");
+        }
+        $rdv->honorerRendezVous();
+        $this->rdvRepository->updateStatut($idRdv, $rdv);
+    }
+
+    public function nonHonorerRendezVous(String $idRdv) : void{
+        $rdv = $this->rdvRepository->findById($idRdv);
+        if(!$rdv){
+            throw new RendezVousInvalideException("Rendez Vous innexistant");
+        }
+        $rdv->nonHonorerRendezVous();
+        $this->rdvRepository->updateStatut($idRdv, $rdv);
+    }
 }
