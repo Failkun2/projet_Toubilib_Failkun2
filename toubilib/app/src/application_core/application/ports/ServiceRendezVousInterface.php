@@ -16,4 +16,6 @@ interface ServiceRendezVousInterface{
     public function honorerRendezVous(String $idRdv) : void;
 
     public function nonHonorerRendezVous(String $idRdv) : void;
+
+    public function consulterHistorique(String $patientId) : array;
 }
