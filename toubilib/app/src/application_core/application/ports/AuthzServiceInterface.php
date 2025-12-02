@@ -11,4 +11,9 @@ interface AuthzServiceInterface{
     public function authzConsulterRendezVous(ProfileDTO $profil) : bool;
 
     public function authzAnnulerRendezVous(ProfileDTO $profil) : bool;
+
+    public function authzHonorerRendezVous(ProfileDTO $profil, String $praticienId) : bool;
+
+    public function authzNonHonorerRendezVous(ProfileDTO $profil, String $praticienId) : bool;
+
 }

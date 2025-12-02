@@ -20,4 +20,12 @@ class AuthzService implements AuthzServiceInterface{
     public function authzAnnulerRendezVous(ProfileDTO $profil) : bool{
         return $profil->__get('role') === 1 || $profil->__get('role') === 10;
     }
+
+    public function authzHonorerRendezVous(ProfileDTO $profil, String $praticienId) : bool{
+        return $profil->__get('role') === 10 && $profil->__get('id') === $praticienId;
+    }
+
+    public function authzNonHonorerRendezVous(ProfileDTO $profil, String $praticienId) : bool{
+        return $profil->__get('role') === 10 && $profil->__get('id') === $praticienId;
+    }
 }
