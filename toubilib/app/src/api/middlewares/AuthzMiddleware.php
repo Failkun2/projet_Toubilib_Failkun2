@@ -42,12 +42,24 @@ class AuthzMiddleware implements MiddlewareInterface{
                 break;
             case str_starts_with($routeName, '/rdvs') && str_contains($routeName, '/annuler'):
                 if(!$this->authz->authzCreerRendezVous($profil)){
-                    return $this->forbidden('Que un patient ou un patient peuvent annuler un rendez vous');
+                    return $this->forbidden('Que un patient ou un praticien peuvent annuler un rendez vous');
+                }
+                break;
+            case str_starts_with($routeName, '/rdvs') && str_contains($routeName, '/honorer'):
+                $id = $route->getArgument('id');
+                if(!$this->authz->authzHonorerRendezVous($profil, $id)){
+                    return $this->forbidden('Que le praticien peut honorer le rendez vous');
+                }
+                break;
+            case str_starts_with($routeName, '/rdvs') && str_contains($routeName, '/nonHonorer'):
+                $id = $route->getArgument('id');
+                if(!$this->authz->authzNonHonorerRendezVous($profil, $id)){
+                    return $this->forbidden('Que le praticien peut ne pas honorer le rendez vous');
                 }
                 break;
             case str_starts_with($routeName, '/rdvs/'):
                 if(!$this->authz->authzConsulterRendezVous($profil)){
-                    return $this->forbidden('Que un patient ou un patient peuvent consulter un rendez vous');
+                    return $this->forbidden('Que un patient ou un praticien peuvent consulter un rendez vous');
                 }
                 break;
             default:
