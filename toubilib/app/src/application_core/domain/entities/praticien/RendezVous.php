@@ -56,13 +56,33 @@ class RendezVous
     }
 
     public function annulerRendezVous() : void{
-        if($this->statut === 2){
+        if($this->statut === 3){
             throw new RendezVousInvalideException("Le rendez vous est déjà annuler");
         }
         if($this->dateDebut < new \DateTimeImmutable()){
             throw new RendezVousInvalideException("Le rendez vous est déjà passé");
         }
 
+        $this->statut = 3;
+    }
+
+    public function honorerRendezVous() : void{
+        if($this->statut === 1){
+            throw new RendezVousInvalideException("Le rendez vous est déjà honorer");
+        }
+        if($this->statut === 3){
+            throw new RendezVousInvalideException("Le rendez vous est annuler");
+        }
+        $this->statut = 1;
+    }
+
+    public function nonHonorerRendezVous() : void{
+        if($this->statut === 2){
+            throw new RendezVousInvalideException("Le rendez vous est déjà non honorer");
+        }
+        if($this->statut === 3){
+            throw new RendezVousInvalideException("Le rendez vous est annuler");
+        }
         $this->statut = 2;
     }
 }
