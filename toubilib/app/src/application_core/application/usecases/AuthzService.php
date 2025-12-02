@@ -28,4 +28,8 @@ class AuthzService implements AuthzServiceInterface{
     public function authzNonHonorerRendezVous(ProfileDTO $profil, String $praticienId) : bool{
         return $profil->__get('role') === 10 && $profil->__get('id') === $praticienId;
     }
+
+    public function authzConsulterHistorique(ProfileDTO $profil, String $patientId) : bool{
+        return $profil->__get('role') === 1 && $profil->__get('id') === $patientId;
+    }
 }

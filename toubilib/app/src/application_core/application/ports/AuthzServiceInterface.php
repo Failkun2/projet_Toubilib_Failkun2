@@ -16,4 +16,7 @@ interface AuthzServiceInterface{
 
     public function authzNonHonorerRendezVous(ProfileDTO $profil, String $praticienId) : bool;
 
+    public function authzConsulterHistorique(ProfileDTO $profil, String $patientId) : bool;
+
+
 }
