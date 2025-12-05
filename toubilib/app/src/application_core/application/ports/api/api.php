@@ -5,6 +5,7 @@ use toubilib\core\application\ports\ConsulterPraticienServiceInterface as Consul
 use toubilib\core\application\ports\ServiceRendezVousInterface as ServiceRendezVousInterface;
 use toubilib\core\application\ports\ConsulterRendezVousServiceInterface as ConsulterRendezVousServiceInterface;
 use toubilib\core\application\ports\AuthnServiceInterface as AuthnServiceInterface;
+use toubilib\core\application\ports\ServicePatientInterface as ServicePatientInterface;
 use toubilib\api\actions\ListerPraticiensAction as ListerPraticiensAction;
 use toubilib\api\actions\PraticienByIdAction as PraticienByIdAction;
 use toubilib\api\actions\PraticienRDVAction as PraticienRDVAction;
@@ -18,6 +19,7 @@ use toubilib\api\actions\FiltrerPraticiensAction as FiltrerPraticiensAction;
 use toubilib\api\actions\HonorerRendezVousAction as HonorerRendezVousAction;
 use toubilib\api\actions\NonHonorerRendezVousAction as NonHonorerRendezVousAction;
 use toubilib\api\actions\ConsulterHistoriqueAction as ConsulterHistoriqueAction;
+use toubilib\api\actions\SignUpAction as SignUpAction;
 use Psr\Container\ContainerInterface;
 use toubilib\api\provider\JWTAuthnProvider as JWTAuthnProvider;
 
@@ -60,5 +62,8 @@ return [
     },
     ConsulterHistoriqueAction::class=> function (ContainerInterface $c) {
         return new ConsulterHistoriqueAction($c->get(ServiceRendezVousInterface::class));
+    },
+    SignUpAction::class=> function (ContainerInterface $c) {
+        return new SignUpAction($c->get(ServicePatientInterface::class));
     },
 ];
