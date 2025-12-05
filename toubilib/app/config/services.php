@@ -19,9 +19,12 @@ use toubilib\core\application\ports\ConsulterRendezVousServiceInterface as Consu
 use toubilib\core\application\usecases\ConsulterRendezVousService as ConsulterRendezVousService;
 use toubilib\core\application\ports\AuthnServiceInterface as AuthnServiceInterface;
 use toubilib\core\application\usecases\AuthnService as AuthnService;
+use toubilib\core\application\ports\ServicePatientInterface as ServicePatientInterface;
+use toubilib\core\application\usecases\ServicePatient as ServicePatient;
 use toubilib\api\middlewares\CreateRdvMiddleware as CreateRdvMiddleware;
 use toubilib\api\middlewares\AuthnMiddleware as AuthnMiddleware;
 use toubilib\api\middlewares\AuthzMiddleware as AuthzMiddleware;
+use toubilib\api\middlewares\CreatePatientMiddleware as CreatePatientMiddleware;
 use toubilib\api\provider\JWTAuthnProvider as JWTAuthnProvider;
 use toubilib\core\application\ports\AuthzServiceInterface as AuthzServiceInterface;
 use toubilib\core\application\usecases\AuthzService as AuthzService;
@@ -94,8 +97,17 @@ return [
     AuthzServiceInterface::class=> function (ContainerInterface $c) {
         return new AuthzService();
     },
+    ServicePatientInterface::class=> function (ContainerInterface $c) {
+        return new ServicePatient(
+            $c->get(AuthnRepositoryInterface::class),
+            $c->get(PatientRepositoryInterface::class)
+        );
+    },
     CreateRdvMiddleware::class => function(ContainerInterface $c){
         return new CreateRdvMiddleware();
+    },
+    CreatePatientMiddleware::class => function(ContainerInterface $c){
+        return new CreatePatientMiddleware();
     },
     JWTAuthnProvider::class => function(ContainerInterface $c){
         $secret = __DIR__ . DIRECTORY_SEPARATOR . 'secret.ini';
