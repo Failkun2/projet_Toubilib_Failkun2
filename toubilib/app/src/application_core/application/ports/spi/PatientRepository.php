@@ -30,4 +30,17 @@ class PatientRepository implements PatientRepositoryInterface{
         );
     }
 
+    public function creerPatient(string $id, array $data) : void{
+        $stmt = $this->pdo->prepare("INSERT INTO patient (id, nom, prenom, date_naissance, email, telephone)
+        VALUES(:id, :nom, :prenom, :dateNaissance, :email, :telephone);");
+        $stmt->execute([
+            'id' => $id, 
+            'nom' => $data['nom'],
+            'prenom' => $data['prenom'],
+            'dateNaissance' => $data['dateNaissance'],
+            'email' => $data['email'],
+            'telephone' => $data['telephone'],
+        ]);
+    }
+
 }
