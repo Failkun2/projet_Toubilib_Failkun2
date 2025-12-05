@@ -47,4 +47,25 @@ class AuthnRepository implements AuthnRepositoryInterface{
             (int)$user["role"]
         );
     }
+
+    public function creerUser(string $id, array $data) : void{
+        $hash = password_hash($data['password'], PASSWORD_DEFAULT);
+        $stmt = $this->pdo->prepare("INSERT INTO users(id, email, password, role)
+        VALUES (:id, :email, :password, 1);");
+        $stmt->execute([
+            'id' => $id,
+            'email' => $data['email'],
+            'password' => $hash
+        ]);
+    }
+
+    public function userExiste(String $email) : bool{
+        $stmt = $this->pdo->prepare("SELECT COUNT(*)
+        FROM users
+        WHERE email= :email;");
+        $stmt->execute([
+            'email' => $email,
+        ]);
+        return (int) $stmt->fetchColumn() > 0;
+    }
 }
