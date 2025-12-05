@@ -18,8 +18,11 @@ use toubilib\api\actions\FiltrerPraticiensAction as FiltrerPraticiensAction;
 use toubilib\api\actions\HonorerRendezVousAction as HonorerRendezVousAction;
 use toubilib\api\actions\NonHonorerRendezVousAction as NonHonorerRendezVousAction;
 use toubilib\api\actions\ConsulterHistoriqueAction as ConsulterHistoriqueAction;
+use toubilib\api\actions\SignUpAction as SignUpAction;
 use toubilib\api\middlewares\AuthnMiddleware as AuthnMiddleware;
 use toubilib\api\middlewares\AuthzMiddleware as AuthzMiddleware;
+use toubilib\api\middlewares\CreatePatientMiddleware as CreatePatientMiddleware;
+
 
 
 return function( \Slim\App $app):\Slim\App {
@@ -34,6 +37,8 @@ return function( \Slim\App $app):\Slim\App {
     $app->post('/auth/signin', SignInAction::class); //tester
     $app->post('/auth/refresh', RefreshAction::class); //tester
     $app->get('/praticiens/filtrer', FiltrerPraticiensAction::class); //tester
+    $app->post('/auth/signup', SignUpAction::class)
+    ->add(CreatePatientMiddleware::class); //tester
 
     $app->group('', function(\Slim\Routing\RouteCollectorProxy $group){
       //http://localhost:6080/praticiens/4305f5e9-be5a-4ccf-8792-7e07d7017363/agenda?debut=2025-12-01&fin=2025-12-10
