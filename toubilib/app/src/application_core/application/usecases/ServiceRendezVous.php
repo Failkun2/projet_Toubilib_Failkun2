@@ -82,6 +82,11 @@ class ServiceRendezVous implements ServiceRendezVousInterface
 
         $overlapping = $this->rdvRepository->countOverlapping($dto->__get('praticienId'), $debut, $fin);
         if($overlapping > 0){
+            $errors['Disponibilite_rdv'] = 'Praticien en rdv';
+        }
+
+        $indisponibilite = $this->rdvRepository->verifierIndisponibilite($dto->__get('praticienId'), $debut, $fin);
+        if($indisponibilite > 0){
             $errors['Disponibilite'] = 'Praticien indisponible';
         }
 
@@ -217,5 +222,15 @@ class ServiceRendezVous implements ServiceRendezVousInterface
             ];
         }
         return $result;
+    }
+
+    public function creerIndisponibilite(String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : String{
+
+
+        $id = Uuid::uuid4()->toString();
+        
+        $this->rdvRepository->addIndisponibilite($id, $praticienId, $debut, $fin);
+
+        return $id;
     }
 }

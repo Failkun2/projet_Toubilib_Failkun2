@@ -18,4 +18,6 @@ interface ServiceRendezVousInterface{
     public function nonHonorerRendezVous(String $idRdv) : void;
 
     public function consulterHistorique(String $patientId) : array;
+
+    public function creerIndisponibilite(String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : String;
 }
