@@ -19,6 +19,7 @@ use toubilib\api\actions\HonorerRendezVousAction as HonorerRendezVousAction;
 use toubilib\api\actions\NonHonorerRendezVousAction as NonHonorerRendezVousAction;
 use toubilib\api\actions\ConsulterHistoriqueAction as ConsulterHistoriqueAction;
 use toubilib\api\actions\SignUpAction as SignUpAction;
+use toubilib\api\actions\IndisponibiliteAction as IndisponibiliteAction;
 use toubilib\api\middlewares\AuthnMiddleware as AuthnMiddleware;
 use toubilib\api\middlewares\AuthzMiddleware as AuthzMiddleware;
 use toubilib\api\middlewares\CreatePatientMiddleware as CreatePatientMiddleware;
@@ -50,6 +51,8 @@ return function( \Slim\App $app):\Slim\App {
         $group->patch('/rdvs/{id}/honorer', HonorerRendezVousAction::class); //tester
         $group->patch('/rdvs/{id}/nonHonorer', NonHonorerRendezVousAction::class); //tester
         $group->get('/patients/{id}/historique', ConsulterHistoriqueAction::class); //tester
+        //http://localhost:6080/praticiens/4305f5e9-be5a-4ccf-8792-7e07d7017363/indisponibilites?debut=2025-12-21&fin=2025-12-22
+        $group->post('/praticiens/{id}/indisponibilites', IndisponibiliteAction::class); //tester
     })
     ->add(AuthnMiddleware::class)
     ->add(AuthzMiddleware::class);
