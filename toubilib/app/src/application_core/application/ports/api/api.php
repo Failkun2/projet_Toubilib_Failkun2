@@ -20,6 +20,7 @@ use toubilib\api\actions\HonorerRendezVousAction as HonorerRendezVousAction;
 use toubilib\api\actions\NonHonorerRendezVousAction as NonHonorerRendezVousAction;
 use toubilib\api\actions\ConsulterHistoriqueAction as ConsulterHistoriqueAction;
 use toubilib\api\actions\SignUpAction as SignUpAction;
+use toubilib\api\actions\IndisponibiliteAction as IndisponibiliteAction;
 use Psr\Container\ContainerInterface;
 use toubilib\api\provider\JWTAuthnProvider as JWTAuthnProvider;
 
@@ -65,5 +66,8 @@ return [
     },
     SignUpAction::class=> function (ContainerInterface $c) {
         return new SignUpAction($c->get(ServicePatientInterface::class));
+    },
+    IndisponibiliteAction::class=> function (ContainerInterface $c) {
+        return new IndisponibiliteAction($c->get(ServiceRendezVousInterface::class));
     },
 ];
