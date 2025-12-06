@@ -39,8 +39,8 @@ Class SignUpAction extends AbstractAction{
             'id' => $newId,
             'message' => 'Patient créer'
         ];
-        $location = '/rdvs/' . $newId;
+
         $rs->getBody()->write(json_encode($payload));
-        return $rs->withStatus(201)->withHeader('Content-Type', 'application/json')->withHeader('Location', $location);
+        return $rs->withStatus(201)->withHeader('Content-Type', 'application/json');
     }
 }
