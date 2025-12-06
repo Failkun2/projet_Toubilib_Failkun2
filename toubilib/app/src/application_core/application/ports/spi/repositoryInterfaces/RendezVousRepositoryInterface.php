@@ -20,4 +20,7 @@ interface RendezVousRepositoryInterface{
 
     public function findHistoriqueByPatient(String $patientId): array;
 
+    public function addIndisponibilite(String $id, String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : void;
+
+    public function verifierIndisponibilite(String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : int;
 }

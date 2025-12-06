@@ -134,4 +134,31 @@ class RendezVousRepository implements RendezVousRepositoryInterface{
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function addIndisponibilite(String $id, String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : void{
+        $stmt = $this->pdo->prepare("INSERT INTO indisponibilite (id, praticien_id, date_heure_debut, date_heure_fin)
+        VALUES(:id, :praticienId, :debut, :fin)");
+
+        $stmt->execute([
+            'id' => $id,
+            'praticienId' => $praticienId,
+            'debut' => $debut->format('Y-m-d H:i:s'),
+            'fin' => $fin->format('Y-m-d H:i:s')
+        ]);
+    }
+
+    public function verifierIndisponibilite(String $praticienId, \DateTimeImmutable $debut, \DateTimeImmutable $fin) : int{
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) AS cnt
+        FROM indisponibilite
+        WHERE praticien_id = :praticien_id
+        AND date_heure_debut < :fin
+        AND date_heure_fin > :debut");
+        $stmt->execute([
+            'praticien_id' => $praticienId,
+            'debut' => $debut->format('Y-m-d H:i:s'),
+            'fin' => $fin->format('Y-m-d H:i:s')
+        ]);
+        $indisponibilite = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)($indisponibilite['cnt'] ?? 0);
+    }
 }
