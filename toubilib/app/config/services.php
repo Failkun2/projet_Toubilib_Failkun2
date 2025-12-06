@@ -2,13 +2,13 @@
 
 use Psr\Container\ContainerInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface as PraticienRepositoryInterface;
-use toubilib\core\application\ports\spi\PraticienRepository as PraticienRepository;
+use toubilib\infra\repositories\PraticienRepository as PraticienRepository;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PatientRepositoryInterface as PatientRepositoryInterface;
-use toubilib\core\application\ports\spi\PatientRepository as PatientRepository;
+use toubilib\infra\repositories\PatientRepository as PatientRepository;
 use toubilib\core\application\ports\spi\repositoryInterfaces\RendezVousRepositoryInterface as RendezVousRepositoryInterface;
-use toubilib\core\application\ports\spi\RendezVousRepository as RendezVousRepository;
+use toubilib\infra\repositories\RendezVousRepository as RendezVousRepository;
 use toubilib\core\application\ports\spi\repositoryInterfaces\AuthnRepositoryInterface as AuthnRepositoryInterface;
-use toubilib\core\application\ports\spi\AuthnRepository as AuthnRepository;
+use toubilib\infra\repositories\AuthnRepository as AuthnRepository;
 use toubilib\core\application\ports\ServicePraticienInterface as ServicePraticienInterface;
 use toubilib\core\application\usecases\ServicePraticien as ServicePraticien;
 use toubilib\core\application\ports\ServiceRendezVousInterface as ServiceRendezVousInterface;

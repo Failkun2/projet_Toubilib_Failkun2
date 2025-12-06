@@ -1,6 +1,6 @@
 <?php
 
-namespace toubilib\core\application\ports\spi;
+namespace toubilib\infra\repositories;
 
 use PDO;
 use toubilib\core\domain\entities\praticien\RendezVous as RendezVous;
