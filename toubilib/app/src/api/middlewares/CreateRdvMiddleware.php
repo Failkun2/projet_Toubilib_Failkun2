@@ -27,7 +27,7 @@ class CreateRdvMiddleware implements MiddlewareInterface{
 
         $erreurs = [];
 
-        $required = ['praticienId' => 'string', 'patientId' => 'string', 'dateDebut' => 'datetime', 'dateFin' => 'datetime', 'duree' => 'int', 'motifVisite' => 'string'];
+        $required = ['praticienId' => 'string', 'patientId' => 'string', 'dateDebut' => 'datetime', 'duree' => 'int', 'motifVisite' => 'string'];
         foreach($required as $r => $type){
             if(!isset($data[$r])){
                 $erreurs[$r] = 'Champ requis';
