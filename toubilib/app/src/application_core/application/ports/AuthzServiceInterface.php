@@ -18,5 +18,5 @@ interface AuthzServiceInterface{
 
     public function authzConsulterHistorique(ProfileDTO $profil, String $patientId) : bool;
 
-
+    public function authzCreerIndisponibilite(ProfileDTO $profil, String $praticienId) : bool;
 }
