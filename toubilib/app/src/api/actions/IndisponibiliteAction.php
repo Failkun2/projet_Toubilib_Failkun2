@@ -20,7 +20,7 @@ class IndisponibiliteAction extends AbstractAction{
         $praticienId = $args['id'] ?? null;
         $query = $rq->getQueryParams();
         if(!$praticienId || !isset($query['debut']) || !isset($query['fin'])){
-            $json = json_encode(['erreur' => 'parametre manquant'], JSON_PRETTY_PRINT);
+            $json = json_encode(['erreur' => 'parametre manquant'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(400);
         }
@@ -28,7 +28,7 @@ class IndisponibiliteAction extends AbstractAction{
             $debut = new \DateTimeImmutable($query['debut']);
             $fin = new \DateTimeImmutable($query['fin']);
         } catch(\Exception $e){
-            $json = json_encode(['erreur' => 'dates invalides'], JSON_PRETTY_PRINT);
+            $json = json_encode(['erreur' => 'dates invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(400);
         }
@@ -37,7 +37,7 @@ class IndisponibiliteAction extends AbstractAction{
             'id' => $newId,
             'message' => 'Indisponibilité créer'
         ];
-        $rs->getBody()->write(json_encode($payload));
+        $rs->getBody()->write(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         return $rs->withStatus(201)->withHeader('Content-Type', 'application/json');
     }
 }

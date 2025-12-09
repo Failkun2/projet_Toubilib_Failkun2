@@ -21,7 +21,8 @@ class ConsulterHistoriqueAction extends AbstractAction{
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
         $patientId = $args['id'] ?? null;
         if(!$patientId){
-            return $this->jsonResponse($rs, ['erreur' => 'ID patient manquant'], 400);
+            $rs->getBody()->write(json_encode(['erreur' => 'ID patient manquant'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+            return $rs->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         $historique = $this->service->consulterHistorique($patientId);
@@ -32,7 +33,7 @@ class ConsulterHistoriqueAction extends AbstractAction{
                 'self' => ['href' => "/patients/$patientId/historique"],
             ]
         ];
-        $rs->getBody()->write(json_encode($body));
+        $rs->getBody()->write(json_encode($body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         return $rs->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
 }

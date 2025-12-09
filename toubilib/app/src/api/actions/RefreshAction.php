@@ -20,14 +20,14 @@ Class RefreshAction extends AbstractAction{
         $data = json_decode($rq->getBody()->getContents(), true);
         $token = $data['refreshToken'] ?? null;
         if(!$token){
-            $rs->getBody()->write(json_encode(['erreur' => 'refresh token manquant']));
+            $rs->getBody()->write(json_encode(['erreur' => 'refresh token manquant'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
             return $rs->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 
         $authn = $this->authnProvider->refresh($token);
 
         if(!$authn){
-            $rs->getBody()->write(json_encode(['erreur' => 'token invalide ou expiré']));
+            $rs->getBody()->write(json_encode(['erreur' => 'token invalide ou expiré'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
             return $rs->withHeader('Content-Type', 'application/json')->withStatus(403);
         }
 
@@ -43,7 +43,7 @@ Class RefreshAction extends AbstractAction{
                 'self' => ['href' => "/auth/refresh", 'method' => 'POST'],
             ]
         ];
-        $json = json_encode($body, JSON_PRETTY_PRINT);
+        $json = json_encode($body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $rs->getBody()->write($json);
         return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
     }

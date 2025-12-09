@@ -15,21 +15,27 @@ class PraticienRepository implements PraticienRepositoryInterface{
     }
 
     public function findPraticiens() : array{
-        $stmt = $this->pdo->query("SELECT p.nom, p.prenom, p.ville, p.email, s.libelle AS specialite, p.telephone, st.adresse, ARRAY_REMOVE(ARRAY_AGG(DISTINCT mv.libelle), NULL) AS motifs, ARRAY_REMOVE(ARRAY_AGG(DISTINCT mp.libelle), NULL) AS moyens_paiement
+        $stmt = $this->pdo->query("SELECT p.id, p.nom, p.prenom, p.ville, p.email, s.libelle AS specialite, p.telephone, st.adresse
         FROM praticien p JOIN specialite s ON p.specialite_id = s.id
         LEFT JOIN structure st ON p.structure_id = st.id
-        LEFT JOIN praticien2motif pm ON p.id = pm.praticien_id
-        LEFT JOIN motif_visite mv ON pm.motif_id = mv.id
-        LEFT JOIN praticien2moyen pm2 ON p.id = pm2.praticien_id
-        LEFT JOIN moyen_paiement mp ON pm2.moyen_id = mp.id
-        GROUP BY p.nom, p.prenom, p.ville, p.email, s.libelle, p.telephone, st.adresse;");
+        GROUP BY p.id, p.nom, p.prenom, p.ville, p.email, s.libelle, p.telephone, st.adresse;");
         $praticiens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(function($praticien){
-            $motifs = $praticien["motifs"];
-            $motifsArray = $motifs ? explode(',', trim($motifs, '{}')) : [];
-            $moyens = $praticien["moyens_paiement"];
-            $moyensArray = $moyens ? explode(',', trim($moyens, '{}')) : [];
+
+            $stmt2 = $this->pdo->prepare("SELECT mv.libelle
+            FROM praticien2motif pm
+            JOIN motif_visite mv ON pm.motif_id = mv.id
+            WHERE pm.praticien_id = :id");
+            $stmt2->execute(['id' => $praticien["id"]]);
+            $motifsArray = array_column($stmt2->fetchAll(PDO::FETCH_ASSOC), 'libelle');
+
+            $stmt3 = $this->pdo->prepare("SELECT mp.libelle
+            FROM praticien2moyen pm
+            JOIN moyen_paiement mp ON pm.moyen_id = mp.id
+            WHERE pm.praticien_id = :id");
+            $stmt3->execute(['id' => $praticien["id"]]);
+            $moyensArray = array_column($stmt3->fetchAll(PDO::FETCH_ASSOC), 'libelle');
 
             return new Praticien(
                 $praticien["nom"],
@@ -46,21 +52,27 @@ class PraticienRepository implements PraticienRepositoryInterface{
     }
     
     public function findById(String $id) : Praticien{
-        $stmt = $this->pdo->prepare("SELECT p.nom, p.prenom, p.ville, p.email, s.libelle AS specialite, p.telephone, st.adresse, ARRAY_REMOVE(ARRAY_AGG(DISTINCT mv.libelle), NULL) AS motifs, ARRAY_REMOVE(ARRAY_AGG(DISTINCT mp.libelle), NULL) AS moyens_paiement
+        $stmt = $this->pdo->prepare("SELECT p.nom, p.prenom, p.ville, p.email, s.libelle AS specialite, p.telephone, st.adresse
         FROM praticien p JOIN specialite s ON p.specialite_id = s.id
         LEFT JOIN structure st ON p.structure_id = st.id
-        LEFT JOIN praticien2motif pm ON p.id = pm.praticien_id
-        LEFT JOIN motif_visite mv ON pm.motif_id = mv.id
-        LEFT JOIN praticien2moyen pm2 ON p.id = pm2.praticien_id
-        LEFT JOIN moyen_paiement mp ON pm2.moyen_id = mp.id
         WHERE p.id = :id
         GROUP BY p.nom, p.prenom, p.ville, p.email, s.libelle, p.telephone, st.adresse;");
         $stmt->execute(['id' => $id]);
         $praticien = $stmt->fetch(PDO::FETCH_ASSOC);
-        $motifs = $praticien["motifs"];
-        $motifsArray = $motifs ? explode(',', trim($motifs, '{}')) : [];
-        $moyens = $praticien["moyens_paiement"];
-        $moyensArray = $moyens ? explode(',', trim($moyens, '{}')) : [];
+
+        $stmt2 = $this->pdo->prepare("SELECT mv.libelle
+        FROM praticien2motif pm
+        JOIN motif_visite mv ON pm.motif_id = mv.id
+        WHERE pm.praticien_id = :id");
+        $stmt2->execute(['id' => $id]);
+        $motifsArray = array_column($stmt2->fetchAll(PDO::FETCH_ASSOC), 'libelle');
+
+        $stmt3 = $this->pdo->prepare("SELECT mp.libelle
+        FROM praticien2moyen pm
+        JOIN moyen_paiement mp ON pm.moyen_id = mp.id
+        WHERE pm.praticien_id = :id");
+        $stmt3->execute(['id' => $id]);
+        $moyensArray = array_column($stmt3->fetchAll(PDO::FETCH_ASSOC), 'libelle');
 
         return new Praticien(
             $praticien["nom"],
@@ -88,22 +100,29 @@ class PraticienRepository implements PraticienRepositoryInterface{
     }
 
     public function findBySpecialite(String $specialite) : array{
-        $stmt = $this->pdo->prepare("SELECT p.nom, p.prenom, p.ville, p.email, s.libelle AS specialite, p.telephone, st.adresse, ARRAY_REMOVE(ARRAY_AGG(DISTINCT mv.libelle), NULL) AS motifs, ARRAY_REMOVE(ARRAY_AGG(DISTINCT mp.libelle), NULL) AS moyens_paiement
+
+        $stmt = $this->pdo->prepare("SELECT p.id, p.nom, p.prenom, p.ville, p.email, s.libelle AS specialite, p.telephone, st.adresse
         FROM praticien p JOIN specialite s ON p.specialite_id = s.id
         LEFT JOIN structure st ON p.structure_id = st.id
-        LEFT JOIN praticien2motif pm ON p.id = pm.praticien_id
-        LEFT JOIN motif_visite mv ON pm.motif_id = mv.id
-        LEFT JOIN praticien2moyen pm2 ON p.id = pm2.praticien_id
-        LEFT JOIN moyen_paiement mp ON pm2.moyen_id = mp.id
         WHERE s.libelle = :specialite
-        GROUP BY p.nom, p.prenom, p.ville, p.email, s.libelle, p.telephone, st.adresse;");
+        GROUP BY p.id, p.nom, p.prenom, p.ville, p.email, s.libelle, p.telephone, st.adresse;");
         $stmt->execute(['specialite' => $specialite]);
         $praticiens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
         return array_map(function($praticien){
-            $motifs = $praticien["motifs"];
-            $motifsArray = $motifs ? explode(',', trim($motifs, '{}')) : [];
-            $moyens = $praticien["moyens_paiement"];
-            $moyensArray = $moyens ? explode(',', trim($moyens, '{}')) : [];
+            $stmt2 = $this->pdo->prepare("SELECT mv.libelle
+            FROM praticien2motif pm
+            JOIN motif_visite mv ON pm.motif_id = mv.id
+            WHERE pm.praticien_id = :id");
+            $stmt2->execute(['id' => $praticien["id"]]);
+            $motifsArray = array_column($stmt2->fetchAll(PDO::FETCH_ASSOC), 'libelle');
+
+            $stmt3 = $this->pdo->prepare("SELECT mp.libelle
+            FROM praticien2moyen pm
+            JOIN moyen_paiement mp ON pm.moyen_id = mp.id
+            WHERE pm.praticien_id = :id");
+            $stmt3->execute(['id' => $praticien["id"]]);
+            $moyensArray = array_column($stmt3->fetchAll(PDO::FETCH_ASSOC), 'libelle');
 
             return new Praticien(
                 $praticien["nom"],
@@ -120,22 +139,29 @@ class PraticienRepository implements PraticienRepositoryInterface{
     }
 
     public function findByVille(String $ville) : array{
-        $stmt = $this->pdo->prepare("SELECT p.nom, p.prenom, p.ville, p.email, s.libelle AS specialite, p.telephone, st.adresse, ARRAY_REMOVE(ARRAY_AGG(DISTINCT mv.libelle), NULL) AS motifs, ARRAY_REMOVE(ARRAY_AGG(DISTINCT mp.libelle), NULL) AS moyens_paiement
+
+        $stmt = $this->pdo->prepare("SELECT p.id, p.nom, p.prenom, p.ville, p.email, s.libelle AS specialite, p.telephone, st.adresse
         FROM praticien p JOIN specialite s ON p.specialite_id = s.id
         LEFT JOIN structure st ON p.structure_id = st.id
-        LEFT JOIN praticien2motif pm ON p.id = pm.praticien_id
-        LEFT JOIN motif_visite mv ON pm.motif_id = mv.id
-        LEFT JOIN praticien2moyen pm2 ON p.id = pm2.praticien_id
-        LEFT JOIN moyen_paiement mp ON pm2.moyen_id = mp.id
         WHERE p.ville = :ville
-        GROUP BY p.nom, p.prenom, p.ville, p.email, s.libelle, p.telephone, st.adresse;");
+        GROUP BY p.id, p.nom, p.prenom, p.ville, p.email, s.libelle, p.telephone, st.adresse;");
         $stmt->execute(['ville' => $ville]);
         $praticiens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         return array_map(function($praticien){
-            $motifs = $praticien["motifs"];
-            $motifsArray = $motifs ? explode(',', trim($motifs, '{}')) : [];
-            $moyens = $praticien["moyens_paiement"];
-            $moyensArray = $moyens ? explode(',', trim($moyens, '{}')) : [];
+            $stmt2 = $this->pdo->prepare("SELECT mv.libelle
+            FROM praticien2motif pm
+            JOIN motif_visite mv ON pm.motif_id = mv.id
+            WHERE pm.praticien_id = :id");
+            $stmt2->execute(['id' => $praticien["id"]]);
+            $motifsArray = array_column($stmt2->fetchAll(PDO::FETCH_ASSOC), 'libelle');
+
+            $stmt3 = $this->pdo->prepare("SELECT mp.libelle
+            FROM praticien2moyen pm
+            JOIN moyen_paiement mp ON pm.moyen_id = mp.id
+            WHERE pm.praticien_id = :id");
+            $stmt3->execute(['id' => $praticien["id"]]);
+            $moyensArray = array_column($stmt3->fetchAll(PDO::FETCH_ASSOC), 'libelle');
 
             return new Praticien(
                 $praticien["nom"],
@@ -152,23 +178,30 @@ class PraticienRepository implements PraticienRepositoryInterface{
     }
 
     public function findBySpecialiteVille(String $specialite, String $ville) : array{
-        $stmt = $this->pdo->prepare("SELECT p.nom, p.prenom, p.ville, p.email, s.libelle AS specialite, p.telephone, st.adresse, ARRAY_REMOVE(ARRAY_AGG(DISTINCT mv.libelle), NULL) AS motifs, ARRAY_REMOVE(ARRAY_AGG(DISTINCT mp.libelle), NULL) AS moyens_paiement
+
+        $stmt = $this->pdo->prepare("SELECT p.id, p.nom, p.prenom, p.ville, p.email, s.libelle AS specialite, p.telephone, st.adresse
         FROM praticien p JOIN specialite s ON p.specialite_id = s.id
         LEFT JOIN structure st ON p.structure_id = st.id
-        LEFT JOIN praticien2motif pm ON p.id = pm.praticien_id
-        LEFT JOIN motif_visite mv ON pm.motif_id = mv.id
-        LEFT JOIN praticien2moyen pm2 ON p.id = pm2.praticien_id
-        LEFT JOIN moyen_paiement mp ON pm2.moyen_id = mp.id
         WHERE s.libelle = :specialite
         AND p.ville = :ville
-        GROUP BY p.nom, p.prenom, p.ville, p.email, s.libelle, p.telephone, st.adresse;");
+        GROUP BY p.id, p.nom, p.prenom, p.ville, p.email, s.libelle, p.telephone, st.adresse;");
         $stmt->execute(['specialite' => $specialite, 'ville' => $ville]);
         $praticiens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         return array_map(function($praticien){
-            $motifs = $praticien["motifs"];
-            $motifsArray = $motifs ? explode(',', trim($motifs, '{}')) : [];
-            $moyens = $praticien["moyens_paiement"];
-            $moyensArray = $moyens ? explode(',', trim($moyens, '{}')) : [];
+            $stmt2 = $this->pdo->prepare("SELECT mv.libelle
+            FROM praticien2motif pm
+            JOIN motif_visite mv ON pm.motif_id = mv.id
+            WHERE pm.praticien_id = :id");
+            $stmt2->execute(['id' => $praticien["id"]]);
+            $motifsArray = array_column($stmt2->fetchAll(PDO::FETCH_ASSOC), 'libelle');
+
+            $stmt3 = $this->pdo->prepare("SELECT mp.libelle
+            FROM praticien2moyen pm
+            JOIN moyen_paiement mp ON pm.moyen_id = mp.id
+            WHERE pm.praticien_id = :id");
+            $stmt3->execute(['id' => $praticien["id"]]);
+            $moyensArray = array_column($stmt3->fetchAll(PDO::FETCH_ASSOC), 'libelle');
 
             return new Praticien(
                 $praticien["nom"],

@@ -19,7 +19,7 @@ class RendezVousByIdAction extends AbstractAction{
     public function __invoke(ServerRequestInterface $rq, Response $rs, array $args) : Response{
         $id = $args['id'] ?? null;
         if(!$id){
-            $json = json_encode(['erreur' => 'id de rdv manquant'], JSON_PRETTY_PRINT);
+            $json = json_encode(['erreur' => 'id de rdv manquant'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(400);
         }
@@ -33,11 +33,11 @@ class RendezVousByIdAction extends AbstractAction{
                     'praticien' => ['href' => "/praticiens/{$rdv['idPraticien']}"]
                 ]
             ];
-            $json = json_encode($body, JSON_PRETTY_PRINT);
+            $json = json_encode($body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
         } catch(\Throwable $e){
-            $json = json_encode(['erreur' => $e->getMessage()], JSON_PRETTY_PRINT);
+            $json = json_encode(['erreur' => $e->getMessage()], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(404);
         }

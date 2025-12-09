@@ -95,7 +95,7 @@ return [
         return new AuthnService($c->get(AuthnRepositoryInterface::class));
     },
     AuthzServiceInterface::class=> function (ContainerInterface $c) {
-        return new AuthzService();
+        return new AuthzService($c->get(RendezVousRepositoryInterface::class));
     },
     ServicePatientInterface::class=> function (ContainerInterface $c) {
         return new ServicePatient(

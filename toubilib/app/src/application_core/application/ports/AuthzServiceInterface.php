@@ -12,9 +12,9 @@ interface AuthzServiceInterface{
 
     public function authzAnnulerRendezVous(ProfileDTO $profil) : bool;
 
-    public function authzHonorerRendezVous(ProfileDTO $profil, String $praticienId) : bool;
+    public function authzHonorerRendezVous(ProfileDTO $profil, String $rdvId) : bool;
 
-    public function authzNonHonorerRendezVous(ProfileDTO $profil, String $praticienId) : bool;
+    public function authzNonHonorerRendezVous(ProfileDTO $profil, String $rdvId) : bool;
 
     public function authzConsulterHistorique(ProfileDTO $profil, String $patientId) : bool;
 

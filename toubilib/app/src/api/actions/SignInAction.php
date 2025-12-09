@@ -20,7 +20,7 @@ Class SignInAction extends AbstractAction{
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
         $data = $rq->getParsedBody();
         if(empty($data['email']) || empty($data['password'])){
-            $rs->getBody()->write(json_encode(['erreur' => 'email ou mot de passe manquant']));
+            $rs->getBody()->write(json_encode(['erreur' => 'email ou mot de passe manquant'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
             return $rs->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 
@@ -28,7 +28,7 @@ Class SignInAction extends AbstractAction{
         $authn = $this->authnProvider->signIn($dto);
 
         if(!$authn){
-            $rs->getBody()->write(json_encode(['erreur' => 'identifiants invalides']));
+            $rs->getBody()->write(json_encode(['erreur' => 'identifiants invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
             return $rs->withHeader('Content-Type', 'application/json')->withStatus(401);
         }
 
@@ -45,7 +45,7 @@ Class SignInAction extends AbstractAction{
                 'refresh' => ['href' => "/auth/refresh", 'method' => 'POST'],
             ]
         ];
-        $json = json_encode($body, JSON_PRETTY_PRINT);
+        $json = json_encode($body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $rs->getBody()->write($json);
         return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
     }

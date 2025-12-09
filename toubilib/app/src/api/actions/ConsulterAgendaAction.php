@@ -22,13 +22,14 @@ class ConsulterAgendaAction extends AbstractAction{
         $praticienId = $args['id'] ?? null;
         $query = $rq->getQueryParams();
         if(!$praticienId){
-            return $this->jsonResponse($rs, ['erreur' => 'ID praticien manquant'], 400);
+            $rs->getBody()->write(json_encode(['erreur' => 'ID praticien manquant'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+            return $rs->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
         try{
             $debut = new \DateTimeImmutable($query['debut']);
             $fin = new \DateTimeImmutable($query['fin']);
         } catch(\Exception $e){
-            $json = json_encode(['erreur' => 'dates invalides'], JSON_PRETTY_PRINT);
+            $json = json_encode(['erreur' => 'dates invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(400);
         }
@@ -42,7 +43,7 @@ class ConsulterAgendaAction extends AbstractAction{
                 'rdvs' => ['href' => "/praticiens/$praticienId/rdvs"]
             ]
         ];
-        $rs->getBody()->write(json_encode($body));
+        $rs->getBody()->write(json_encode($body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         return $rs->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
 }

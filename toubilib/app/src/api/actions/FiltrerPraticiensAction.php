@@ -22,7 +22,7 @@ class FiltrerPraticiensAction extends AbstractAction{
         $ville = $query['ville'] ?? null;
 
         if($ville === null && $specialite === null){
-            $json = json_encode(['erreur' => 'filtres manquants'], JSON_PRETTY_PRINT);
+            $json = json_encode(['erreur' => 'filtres manquants'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(400);
         }
@@ -40,10 +40,9 @@ class FiltrerPraticiensAction extends AbstractAction{
             '_links' => [
                 'self' => ['href' => '/praticiens/filtrer'],
                 'liste complete' => ['href' => '/praticiens'],
-                'creer' => ['href' => '/rdvs', 'method' => 'POST'] 
             ]
         ];
-        $json = json_encode($body, JSON_PRETTY_PRINT);
+        $json = json_encode($body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $rs->getBody()->write($json);
         return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
     }

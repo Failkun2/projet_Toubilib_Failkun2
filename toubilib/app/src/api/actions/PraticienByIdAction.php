@@ -19,7 +19,7 @@ class PraticienByIdAction extends AbstractAction{
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
         $id = $args['id'] ?? null;
         if(!$id){
-            return new Response(400, [], json_encode(['erreur' => 'id de praticien manquant']));
+            return new Response(400, [], json_encode(['erreur' => 'id de praticien manquant'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         }
         $pratitien = $this->service->afficherPraticien($id);
         $body = [
@@ -31,7 +31,7 @@ class PraticienByIdAction extends AbstractAction{
                 'collection' => ['href' => '/praticiens']
             ] 
         ];
-        $json = json_encode($body, JSON_PRETTY_PRINT);
+        $json = json_encode($body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $rs->getBody()->write($json);
         return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
     }

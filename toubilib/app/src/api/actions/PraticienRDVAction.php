@@ -20,7 +20,7 @@ class PraticienRDVAction extends AbstractAction{
         $id = $args['id'] ?? null;
         $query = $rq->getQueryParams();
         if(!$id || !isset($query['debut']) || !isset($query['fin'])){
-            $json = json_encode(['erreur' => 'parametre manquant'], JSON_PRETTY_PRINT);
+            $json = json_encode(['erreur' => 'parametre manquant'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(400);
         }
@@ -28,7 +28,7 @@ class PraticienRDVAction extends AbstractAction{
             $debut = new \DateTimeImmutable($query['debut']);
             $fin = new \DateTimeImmutable($query['fin']);
         } catch(\Exception $e){
-            $json = json_encode(['erreur' => 'dates invalides'], JSON_PRETTY_PRINT);
+            $json = json_encode(['erreur' => 'dates invalides'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             $rs->getBody()->write($json);
             return $rs->withHeader('Content-type', 'application/json')->withStatus(400);
         }
@@ -41,7 +41,7 @@ class PraticienRDVAction extends AbstractAction{
                 'praticien' => ['href' => "/praticiens/{$id}"]
             ]
         ];
-        $json = json_encode($body, JSON_PRETTY_PRINT);
+        $json = json_encode($body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $rs->getBody()->write($json);
         return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
     }

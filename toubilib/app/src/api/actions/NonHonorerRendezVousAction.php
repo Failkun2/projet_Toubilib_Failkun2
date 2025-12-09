@@ -21,7 +21,7 @@ class NonHonorerRendezVousAction extends AbstractAction{
     public function __invoke(ServerRequestInterface $rq, ResponseInterface $rs, array $args) : ResponseInterface{
         $id = $args['id'] ?? null;
         if(!$id){
-            return new Response(400, [], json_encode(['erreur' => 'id de rdv manquant']));
+            return new Response(400, [], json_encode(['erreur' => 'id de rdv manquant'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         }
         try{
             $this->service->nonHonorerRendezVous($id);
@@ -30,16 +30,16 @@ class NonHonorerRendezVousAction extends AbstractAction{
                 '_links' => [
                     'self' => ['href' => "/rdvs/$id"],
                     'praticiens' => ['href' => '/praticiens']
-                ]]));
+                ]], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
             return $rs->withStatus(200)->withHeader('Content-Type', 'application/json');
         } catch(RendezVousIntrouvableException $e){
-            $rs->getBody()->write(json_encode(['erreur' => $e->getMessage()]));
+            $rs->getBody()->write(json_encode(['erreur' => $e->getMessage()], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
             return $rs->withStatus(404)->withHeader('Content-Type', 'application/json');
         } catch(RendezVousInvalideException $e){
-            $rs->getBody()->write(json_encode(['erreur' => $e->getMessage()]));
+            $rs->getBody()->write(json_encode(['erreur' => $e->getMessage()], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
             return $rs->withStatus(409)->withHeader('Content-Type', 'application/json');
         } catch(\Throwable $t){
-            $rs->getBody()->write(json_encode(['erreur' => $t->getMessage()]));
+            $rs->getBody()->write(json_encode(['erreur' => $t->getMessage()], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
             return $rs->withStatus(500)->withHeader('Content-Type', 'application/json');
         }
     }

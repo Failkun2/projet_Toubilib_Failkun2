@@ -19,56 +19,57 @@ class AuthzMiddleware implements MiddlewareInterface{
     }
 
     public function process(ServerRequestInterface $rq, RequestHandlerInterface $rh) : Response{
-        $route = $rq->getAttribute('route');
-        $profil = $rq->getAttribute('profil');
+        $route = $rq->getAttribute('__route__');
+        $profil = $rq->getAttribute('profile');
 
         if(!$profil instanceof ProfileDTO){
             return $this->forbidden('Profil manquant ou invalide');
         }
 
-        $routeName = $route ? $route->getPattern() : "";
+        $routeName = $route ? $route->getName() : "";
 
-        switch(true){
-            case str_starts_with($routeName, '/praticiens') && str_contains($routeName, '/agenda'):
+
+        switch($routeName){
+            case 'praticien.agenda':
                 $id = $route->getArgument('id');
                 if(!$this->authz->authzConsulterAgenda($profil, $id)){
                     return $this->forbidden('Que le praticien peut consulté son agenda');
                 }
                 break;
-            case str_starts_with($routeName, '/praticiens') && str_contains($routeName, '/rdvs'):
+            case 'praticien.rdv':
                 if(!$this->authz->authzCreerRendezVous($profil)){
                     return $this->forbidden('Que un patient peut creer un rendez vous');
                 }
                 break;
-            case str_starts_with($routeName, '/rdvs') && str_contains($routeName, '/annuler'):
+            case 'rdv.annuler':
                 if(!$this->authz->authzCreerRendezVous($profil)){
                     return $this->forbidden('Que un patient ou un praticien peuvent annuler un rendez vous');
                 }
                 break;
-            case str_starts_with($routeName, '/rdvs') && str_contains($routeName, '/honorer'):
+            case 'rdv.honorer':
                 $id = $route->getArgument('id');
                 if(!$this->authz->authzHonorerRendezVous($profil, $id)){
                     return $this->forbidden('Que le praticien peut honorer le rendez vous');
                 }
                 break;
-            case str_starts_with($routeName, '/rdvs') && str_contains($routeName, '/nonHonorer'):
+            case 'rdv.nonHonorer':
                 $id = $route->getArgument('id');
                 if(!$this->authz->authzNonHonorerRendezVous($profil, $id)){
                     return $this->forbidden('Que le praticien peut ne pas honorer le rendez vous');
                 }
                 break;
-            case str_starts_with($routeName, '/rdvs') && str_contains($routeName, '/indisponibilites'):
+            case 'praticien.indispo':
                 $id = $route->getArgument('id');
                 if(!$this->authz->authzCreerIndisponibilite($profil, $id)){
                     return $this->forbidden('Que le praticien peut gérer ces disponibilités');
                 }
                 break;
-            case str_starts_with($routeName, '/rdvs/'):
+            case 'rdv.id':
                 if(!$this->authz->authzConsulterRendezVous($profil)){
                     return $this->forbidden('Que un patient ou un praticien peuvent consulter un rendez vous');
                 }
                 break;
-            case str_starts_with($routeName, '/patients') && str_contains($routeName, '/historique'):
+            case 'patient.historique':
                 $id = $route->getArgument('id');
                 if(!$this->authz->authzConsulterHistorique($profil, $id)){
                     return $this->forbidden('Que le patient peut consulté son historique');

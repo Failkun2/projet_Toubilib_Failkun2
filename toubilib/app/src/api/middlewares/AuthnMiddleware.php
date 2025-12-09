@@ -4,10 +4,11 @@ namespace toubilib\api\middlewares;
 
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use toubilib\api\provider\JWTAuthnProvider as JWTAuthnProvider;
+use Slim\Psr7\Response;
 
 class AuthnMiddleware implements MiddlewareInterface{
 
@@ -17,16 +18,22 @@ class AuthnMiddleware implements MiddlewareInterface{
         $this->authnProvider = $authnProvider;
     }
     
-    public function __invoke(ServerRequestInterface $rq, RequestHandlerInterface $rh) : Response{
+    public function process(ServerRequestInterface $rq, RequestHandlerInterface $rh) : Response{
         $header = $rq->getHeaderLine('Authorization');
         if(!$header || !str_starts_with($header, 'Bearer ')){
-            return new Response(401, ['Content-type' => 'application/json'], json_encode(['erreur' => 'Token manquant']));
+            $rs = new Response();
+            $json = json_encode(['erreur' => 'Token manquant'], JSON_PRETTY_PRINT);
+            $rs->getBody()->write($json);
+            return $rs->withHeader('Content-type', 'application/json')->withStatus(401);
         }
 
         $token = substr($header, 7);
         $profil = $this->authnProvider->verifierToken($token);
         if(!$profil){
-            return new Response(403, ['Content-type' => 'application/json'], json_encode(['erreur' => 'Token invalide']));
+            $rs = new Response();
+            $json = json_encode(['erreur' => 'Token invalide'], JSON_PRETTY_PRINT);
+            $rs->getBody()->write($json);
+            return $rs->withHeader('Content-type', 'application/json')->withStatus(403);
         }
 
         return $rh->handle($rq->withAttribute('profile', $profil));

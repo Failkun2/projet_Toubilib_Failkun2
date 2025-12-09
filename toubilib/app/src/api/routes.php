@@ -32,30 +32,32 @@ return function( \Slim\App $app):\Slim\App {
 
     //$app->get('/', HomeAction::class);
     $app->get('/praticiens', ListerPraticiensAction::class); //tester
+    //http://localhost:6080/praticiens/filtrer?specialite=ophtalmologie&ville=Paris
+    $app->get('/praticiens/filtrer', FiltrerPraticiensAction::class); //tester
+    $app->get('/praticiens/{id}', PraticienByIdAction::class); //tester
     //http://localhost:6080/praticiens/4305f5e9-be5a-4ccf-8792-7e07d7017363/rdvs?debut=2025-12-01&fin=2025-12-10
     $app->get('/praticiens/{id}/rdvs', PraticienRDVAction::class); //tester
-    $app->get('/rdvs/{id}', RendezVousByIdAction::class); //tester
     $app->post('/auth/signin', SignInAction::class); //tester
     $app->post('/auth/refresh', RefreshAction::class); //tester
-    $app->get('/praticiens/filtrer', FiltrerPraticiensAction::class); //tester
+
     $app->post('/auth/signup', SignUpAction::class)
     ->add(CreatePatientMiddleware::class); //tester
 
     $app->group('', function(\Slim\Routing\RouteCollectorProxy $group){
       //http://localhost:6080/praticiens/4305f5e9-be5a-4ccf-8792-7e07d7017363/agenda?debut=2025-12-01&fin=2025-12-10
-        $group->get('/praticiens/{id}/agenda', ConsulterAgendaAction::class); //tester
+        $group->get('/praticiens/{id}/agenda', ConsulterAgendaAction::class)->setName('praticien.agenda'); //tester avec authz
         $group->post('/praticiens/{id}/rdvs', CreateRendezVousAction::class)
-        ->add(CreateRdvMiddleware::class); //tester
-        $group->get('/praticiens/{id}', PraticienByIdAction::class); //tester
-        $group->patch('/rdvs/{id}/annuler', AnnulerRendezVousAction::class); //tester
-        $group->patch('/rdvs/{id}/honorer', HonorerRendezVousAction::class); //tester
-        $group->patch('/rdvs/{id}/nonHonorer', NonHonorerRendezVousAction::class); //tester
-        $group->get('/patients/{id}/historique', ConsulterHistoriqueAction::class); //tester
+        ->add(CreateRdvMiddleware::class)->setName('praticien.rdv'); //tester avec authz
+        $group->get('/rdvs/{id}', RendezVousByIdAction::class)->setName('rdv.id'); //tester avec authz
+        $group->patch('/rdvs/{id}/annuler', AnnulerRendezVousAction::class)->setName('rdv.annuler'); //tester avec authz
+        $group->patch('/rdvs/{id}/honorer', HonorerRendezVousAction::class)->setName('rdv.honorer'); //tester avec authz
+        $group->patch('/rdvs/{id}/nonHonorer', NonHonorerRendezVousAction::class)->setName('rdv.nonHonorer'); //tester avec authz
+        $group->get('/patients/{id}/historique', ConsulterHistoriqueAction::class)->setName('patient.historique'); //tester avec authz
         //http://localhost:6080/praticiens/4305f5e9-be5a-4ccf-8792-7e07d7017363/indisponibilites?debut=2025-12-21&fin=2025-12-22
-        $group->post('/praticiens/{id}/indisponibilites', IndisponibiliteAction::class); //tester
+        $group->post('/praticiens/{id}/indisponibilites', IndisponibiliteAction::class)->setName('praticien.indispo'); //tester authz
     })
-    ->add(AuthnMiddleware::class)
-    ->add(AuthzMiddleware::class);
+    ->add(AuthzMiddleware::class)
+    ->add(AuthnMiddleware::class);
     
     return $app;
 };

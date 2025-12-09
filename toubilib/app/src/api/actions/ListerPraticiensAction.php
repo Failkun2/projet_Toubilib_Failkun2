@@ -21,11 +21,10 @@ class ListerPraticiensAction extends AbstractAction{
         $body = [
             'praticiens' => $praticiens,
             '_links' => [
-                'self' => ['href' => 'praticiens'],
-                'creer' => ['href' => 'rdvs', 'method' => 'POST'] 
+                'self' => ['href' => '/praticiens']
             ]
         ];
-        $json = json_encode($body, JSON_PRETTY_PRINT);
+        $json = json_encode($body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $rs->getBody()->write($json);
         return $rs->withHeader('Content-type', 'application/json')->withStatus(200);
     }
